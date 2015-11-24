@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AreaDestination;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace AreaDestinationTest
+﻿namespace AreaDestinationTest
 {
+   using System;
+   using Microsoft.VisualStudio.TestTools.UnitTesting;
+   using AreaDestination;
+   using System.Collections.Generic;
+   using System.Linq;
+
    [TestClass]
    public class AreaLineTest
    {
@@ -26,7 +26,7 @@ namespace AreaDestinationTest
 
       #region "Add Area"
 
-      [TestMethod(), Description("Asserts that simple areas can be added")]
+      [TestMethod, Description("Asserts that simple areas can be added")]
       public void AreaLine_AddSingleDistinctAreasWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -39,7 +39,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("3", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that generic areas can be added")]
+      [TestMethod, Description("Asserts that generic areas can be added")]
       public void AreaLine_AddSingleDistinctAreaRangesWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -52,7 +52,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("4-5", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that generic areas can be added")]
+      [TestMethod, Description("Asserts that generic areas can be added")]
       public void AreaLine_AddSingleDistinctAreasWithDifferentDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -65,7 +65,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("4233", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that generic areas can be added")]
+      [TestMethod, Description("Asserts that generic areas can be added")]
       public void AreaLine_AddSingleDistinctAreaRangesWithDifferentDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -78,7 +78,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("433-437", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that generic areas can be added")]
+      [TestMethod, Description("Asserts that generic areas can be added")]
       public void AreaLine_AddSingleConsecutiveAreasWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -90,7 +90,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1-2", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that generic consecutive areas with same precision can be added")]
+      [TestMethod, Description("Asserts that generic consecutive areas with same precision can be added")]
       public void AreaLine_AddSingleConsecutiveAreaRangesWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -102,7 +102,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1-7", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding areas that are already included does not change the range")]
+      [TestMethod, Description("Asserts that adding areas that are already included does not change the range")]
       public void AreaLine_AddSingleAlreadyIncludedAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -116,7 +116,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding areas that are already included does not change the range")]
+      [TestMethod, Description("Asserts that adding areas that are already included does not change the range")]
       public void AreaLine_AddMultipleAlreadyIncludedAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -133,7 +133,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("3", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddSingleStartOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -145,7 +145,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("24-27", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddMultipleStartOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -158,7 +158,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("23-27", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddSingleEndOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -170,7 +170,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("25-28", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddMultipleEndOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -183,7 +183,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("25-28", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddMultipleMixedOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -196,7 +196,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("23-27", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddTotallyOverlappingSingleArea()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -208,7 +208,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("2", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddTotallyOverlappingMultipleArea()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -223,7 +223,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("2", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddTotallyOverlappingMultipleAreaToBeMerge()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -237,7 +237,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("2-3", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddSameSingleArea()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -249,7 +249,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("256", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddSameAreaRange()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -261,7 +261,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("256-257", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding overlapping areas produces the merge")]
+      [TestMethod, Description("Asserts that adding overlapping areas produces the merge")]
       public void AreaLine_AddForConcatenation()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -275,7 +275,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<decimal>(0.4m, AreaList[0].End);
       }
 
-      [TestMethod(), Description("Asserts that adding areas including single zero is handled correctly")]
+      [TestMethod, Description("Asserts that adding areas including single zero is handled correctly")]
       public void AreaLine_AddWithEndIncludingZero()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -286,7 +286,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("45700", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding areas including zeros is handled correctly")]
+      [TestMethod, Description("Asserts that adding areas including zeros is handled correctly")]
       public void AreaLine_AddWithEndIncludingZeros()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -297,7 +297,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("45700000", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding areas including zeros is handled correctly")]
+      [TestMethod, Description("Asserts that adding areas including zeros is handled correctly")]
       public void AreaLine_AddWithEndIncludingZerosMore()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -308,7 +308,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("45700000-45700001", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding areas including zeros is handled correctly")]
+      [TestMethod, Description("Asserts that adding areas including zeros is handled correctly")]
       public void AreaLine_AddWithEndIncludingZerosExtended()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -323,7 +323,7 @@ namespace AreaDestinationTest
 
       #region "Remove Area"
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSingleDistinctSameAreasWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -334,7 +334,7 @@ namespace AreaDestinationTest
          Assert.AreEqual(0, AreaList.Count);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_AddAndRemoveSingleDistinctSameAreasWithSameDecimalsEdge1()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -348,7 +348,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<decimal>(0.4m, AreaList[0].End);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_AddAndRemoveSingleDistinctSameAreasWithSameDecimalsEdge2()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -362,7 +362,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<decimal>(0.4m, AreaList[0].End);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_AddAndRemoveSingleDistinctSameAreasWithSameDecimalsMiddle()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -376,7 +376,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<decimal>(0.4m, AreaList[0].End);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSingleDistinctDifferentAreaWithSameDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -388,7 +388,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1-2", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSingleDistinctSameAreasWithDifferentDecimals()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -400,7 +400,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSingleStartOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -412,7 +412,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("26-27", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveMultipleStartOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -425,7 +425,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("27", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSingleEndOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -437,7 +437,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("25", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveMultipleEndOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -450,7 +450,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("25", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveMultipleMixedOverlappingAreas()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -463,7 +463,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("25", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveTotallyOverlappingSingleArea()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -474,7 +474,7 @@ namespace AreaDestinationTest
          Assert.AreEqual(0, AreaList.Count);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveTotallyOverlappingMultipleArea()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -489,7 +489,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("2", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveTotallyOverlappingMultipleAreaToBeSplit()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -502,7 +502,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("6-7", AreaList[1].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveSameAreaRange()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -513,7 +513,7 @@ namespace AreaDestinationTest
          Assert.AreEqual(0, AreaList.Count);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveBoundariesAreaRange()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -526,7 +526,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("257", AreaList[0].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveCompleteAreaRangeInMultipleSteps()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -538,7 +538,7 @@ namespace AreaDestinationTest
          Assert.AreEqual(0, AreaList.Count);
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveInnerAreaRangeOneDigitDistance()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -552,7 +552,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("258", AreaList[2].ToString());
       }
 
-      [TestMethod(), Description("Asserts that remove areas is handled correctly")]
+      [TestMethod, Description("Asserts that remove areas is handled correctly")]
       public void AreaLine_RemoveInnerMultipleAreaRangeMoreThanOneDigitDistance()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -574,7 +574,7 @@ namespace AreaDestinationTest
 
       #region "Explicit area representation"
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple1()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -588,7 +588,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.2m, 0.4m), new KeyValuePair<decimal, decimal>(list[0].Start, list[0].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple2()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -601,7 +601,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.2m, 0.23m), new KeyValuePair<decimal, decimal>(list[0].Start, list[0].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple3()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -615,7 +615,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.23m, 0.234m), new KeyValuePair<decimal, decimal>(list[1].Start, list[1].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple4()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -629,7 +629,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.3m, 0.34m), new KeyValuePair<decimal, decimal>(list[1].Start, list[1].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple5()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -644,7 +644,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.34m, 0.345m), new KeyValuePair<decimal, decimal>(list[2].Start, list[2].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple6()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -657,7 +657,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.21m, 0.3m), new KeyValuePair<decimal, decimal>(list[0].Start, list[0].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple7()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -671,7 +671,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.22m, 0.3m), new KeyValuePair<decimal, decimal>(list[1].Start, list[1].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple8()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -686,7 +686,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.3m, 0.4m), new KeyValuePair<decimal, decimal>(list[2].Start, list[2].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple9()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -702,7 +702,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.4m, 0.41m), new KeyValuePair<decimal, decimal>(list[3].Start, list[3].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple10()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -716,7 +716,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.3m, 0.31m), new KeyValuePair<decimal, decimal>(list[1].Start, list[1].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple11()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -732,7 +732,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.2345m, 0.23456m), new KeyValuePair<decimal, decimal>(list[3].Start, list[3].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_Explode_simple12()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -748,7 +748,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<KeyValuePair<decimal, decimal>>(new KeyValuePair<decimal, decimal>(0.24m, 0.3m), new KeyValuePair<decimal, decimal>(list[3].Start, list[3].End));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation")]
       public void AreaLine_GetExplicitAreaRepresentationCanExplodeAreasCorrectlyCaseA()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -764,7 +764,7 @@ namespace AreaDestinationTest
             .SequenceEqual(new decimal[] { AreaList[4].Start, AreaList[4].End, AreaList[5].Start, AreaList[5].End, AreaList[6].Start, AreaList[6].End, AreaList[7].Start, AreaList[7].End }));
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation with area removal")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation with area removal")]
       public void AreaLine_GetExplicitAreaRepresentationCanExplodeAreasCorrectlyAfterRemove()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -780,7 +780,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>(sExpectedAreas, sActualAreas);
       }
 
-      [TestMethod(), Description("Asserts that area line contains the correct explicit area representation with full range segment")]
+      [TestMethod, Description("Asserts that area line contains the correct explicit area representation with full range segment")]
       public void AreaLine_GetExplicitAreaRepresentationCanExplodeZeroOneSegment()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -794,7 +794,7 @@ namespace AreaDestinationTest
 
       #region "Union"
 
-      [TestMethod(), Description("Asserts that area line union with same area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line union with same area line is performed correctly")]
       public void AreaLine_UnionOfTheSameAreaLine()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -807,7 +807,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.1, 0.2)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line union with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line union with different area line is performed correctly")]
       public void AreaLine_UnionOfDifferentAreaLine1()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -820,7 +820,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.1, 0.6)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line union with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line union with different area line is performed correctly")]
       public void AreaLine_UnionOfDifferentAreaLine2()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -837,7 +837,7 @@ namespace AreaDestinationTest
 
       #region "Intersection"
 
-      [TestMethod(), Description("Asserts that area line intersection with same area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with same area line is performed correctly")]
       public void AreaLine_IntersectionOfTheSameAreaLine()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -850,7 +850,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.1, 0.2)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine1()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -863,7 +863,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>(string.Empty, ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine2()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -876,7 +876,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.3, 0.4)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine3()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -889,7 +889,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.323, 0.3245)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine4()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -903,7 +903,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.323, 0.3245); [0.399, 0.3999)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine5()
       {
          AreaLineMock AreaLine = new AreaLineMock();
@@ -918,7 +918,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("[0.323, 0.3245); [0.399, 0.3999)", ResultingUnion.ToString());
       }
 
-      [TestMethod(), Description("Asserts that area line intersection with different area line is performed correctly")]
+      [TestMethod, Description("Asserts that area line intersection with different area line is performed correctly")]
       public void AreaLine_IntersectionOfDifferentAreaLine6()
       {
          AreaLineMock AreaLine = new AreaLineMock();

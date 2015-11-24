@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+
    /// <summary>
    /// Class defining a date range, where day is the least important unit.
    /// </summary>
@@ -22,15 +22,13 @@ namespace AreaDestination
       /// <summary>
       /// Creates a new date range covering the full available date range.
       /// </summary>
-      /// <param name="s">Start</param>
-      /// <param name="e">End</param>
       public DateRange()
          : base(DateTime.MinValue.Date, DateTime.MaxValue.Date)
       {
       }
 
       /// <summary>
-      /// Gets the string representation of the <see cref="CAreaRange"/>date range.
+      /// Gets the string representation of the <see cref="DateRange"/>date range.
       /// </summary>
       public override string ToString()
       {

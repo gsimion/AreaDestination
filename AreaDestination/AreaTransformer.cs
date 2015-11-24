@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-using System.Data;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Text;
+   using System.Globalization;
+   using System.Data;
+
    /// <summary>
    /// Static class used for formatting/transforming area codes representations.
    /// </summary>
    public static class AreaTransformer
    {
-      /// <summary>
-      /// Set representing the possible alternatives to read a string an get the digits.
-      /// </summary>
-      public enum ParsingMode
-      {
-         EatChildReturnSingleDigits,
-         EatChildReturnRanges,
-         PreserveChildReturnSingleDigits,
-         PreserveChildReturnRanges
-      }
-
       /// <summary>
       /// Gets the collection of single digits from a string having a full representation of areas with the delimiter and separator specified.
       /// Eats up the child areas and explodes the ranges.
@@ -53,7 +42,7 @@ namespace AreaDestination
       /// if <value>PreserveChildReturnRanges</value> preserves explicit areas and prints single digits and ranges when possible</param>
       /// <returns>List containing single areas formatted according to the parsing method in string format.</returns>
       /// <exception cref="FormatException">When <paramref name="areas"/> is not correctly specified according to <paramref name="sep"/> and <paramref name="del"/></exception>
-      public static List<T> GetAreasFromString<T>(string areas, char sep, char del, ParsingMode parsing) where T : IComparable 
+      public static List<T> GetAreasFromString<T>(string areas, char sep, char del, ParsingMode parsing) where T : IComparable
       {
          if (areas == null || areas.Length == 0)
             return new List<T>();
@@ -64,15 +53,15 @@ namespace AreaDestination
          foreach (ulong[] arearange in areamatrix)
          {
             if (arearange.Length == 1)
-               arealist.Add(new Area<string>(String.Empty, arearange[0]));
+               arealist.Add(new Area<string>(string.Empty, arearange[0]));
             else if (arearange.Length == 2)
-               arealist.Add(new Area<string>(String.Empty, arearange[0], arearange[1]));
+               arealist.Add(new Area<string>(string.Empty, arearange[0], arearange[1]));
             else
                throw new FormatException(Properties.Resources.msgInvalidAreaFormatPassed);
          }
 
-         ExplicitDestination<string> explDest = new ExplicitDestination<string>(String.Empty);
-         Destination<string> sysDest = new Destination<string>(String.Empty);
+         ExplicitDestination<string> explDest = new ExplicitDestination<string>(string.Empty);
+         Destination<string> sysDest = new Destination<string>(string.Empty);
 
          List<T> res = new List<T>();
 
@@ -125,75 +114,93 @@ namespace AreaDestination
          if (areas == null)
             return new ulong[][] { };
          ulong[][] areaRangeArray = (from string sRange in areas.Split(new char[] { sep }, StringSplitOptions.RemoveEmptyEntries)
-                                     select (from area in sRange.Split(new char[] { del }, StringSplitOptions.RemoveEmptyEntries)
-                                             select Convert.ToUInt64(area, CultureInfo.InvariantCulture.NumberFormat)).ToArray())
+                                      select (from area in sRange.Split(new char[] { del }, StringSplitOptions.RemoveEmptyEntries)
+                                              select Convert.ToUInt64(area, CultureInfo.InvariantCulture.NumberFormat)).ToArray())
             .ToArray();
          return areaRangeArray;
       }
 
       /// <summary>
-      /// Gets a string having a full representation of the passed digits. Compresses child digits already belonging to another one.
+      /// Gets a string having a full representation of the passed digits.
       /// </summary>
       /// <param name="digits">List of digits to get the string representation from</param>
       /// <param name="sep">Area separator used for the output</param>
       /// <param name="del">Area range delimiter used for the output</param>
+      /// <param name="compression">Compression method to use</param>
       /// <param name="trimZeros">If <value>True</value> trim the initial zeros, treating the digits as full area codes, so that 0046 becomes 46</param>
       /// <returns>Full representation as string.</returns>
-      public static string TransformAreaDigitsToString(List<string> digits, char sep, char del, bool trimZeros = true)
+      public static string TransformAreaDigitsToString(List<string> digits, char sep, char del, Compression compression, bool trimZeros = true)
       {
          if (digits == null || digits.Count == 0)
-            return String.Empty;
-         ExplicitDestination<string> destination = new ExplicitDestination<string>(String.Empty);
-         foreach (string digit in digits)
+            return string.Empty;
+
+         if (compression == Compression.Full)
          {
-            if (trimZeros)
-               destination.Add(new Area<string>(destination.Id, Convert.ToUInt64(digit, CultureInfo.InvariantCulture.NumberFormat)));
-            else
-               destination.Add(new Area<string>(destination.Id, digit));
+            ExplicitDestination<int> destination = new ExplicitDestination<int>(int.MinValue);
+            foreach (string digit in digits)
+            {
+               if (trimZeros)
+                  destination.Add(new Area<int>(destination.Id, Convert.ToUInt64(digit, CultureInfo.InvariantCulture.NumberFormat)));
+               else
+                  destination.Add(new Area<int>(destination.Id, digit));
+            }
+            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
          }
-            
-         return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] {sep, Global.Space})).Replace(Global.Del, del);
+         else
+         {
+            Destination<int> destination = new Destination<int>(int.MinValue);
+            foreach (string digit in digits)
+            {
+               if (trimZeros)
+                  destination.AddArea(Convert.ToUInt64(digit, CultureInfo.InvariantCulture.NumberFormat));
+               else
+                  destination.AddArea(new Area<int>(destination.Id, digit));
+            }
+            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+         }
       }
 
       /// <summary>
-      /// Gets a string having a full representation of the passed digits. Compresses child digits already belonging to another one.
+      /// Gets a string having a full representation of the passed digits.
       /// </summary>
       /// <param name="rows">Rows containing the digits to get the string representation from</param>
       /// <param name="column">Column of type string containing the area digits</param>
       /// <param name="sep">Area separator used for the output</param>
       /// <param name="del">Area range delimiter used for the output</param>
+      /// <param name="compression">Compression method to use</param>
       /// <param name="trimZeros">If <value>True</value> trim the initial zeros, treating the digits as full area codes, so that 0046 becomes 46</param>
       /// <returns>Full representation as string.</returns>
-      public static string TransformAreaDigitsToString(IEnumerable<DataRow> rows, DataColumn column, char sep, char del, bool trimZeros = true)
+      public static string TransformAreaDigitsToString(IEnumerable<DataRow> rows, DataColumn column, char sep, char del, Compression compression, bool trimZeros = true)
       {
          if (rows == null || !rows.Any())
-            return String.Empty;
+            return string.Empty;
 
          if (column == null || column.DataType != typeof(string))
-            return String.Empty;
+            return string.Empty;
 
          List<string> digits = (from row in rows let digit = row[column].ToString() where digit.Length > 0 select digit).ToList();
-         return TransformAreaDigitsToString(digits, sep, del, trimZeros);
+         return TransformAreaDigitsToString(digits, sep, del, compression, trimZeros);
       }
 
       /// <summary>
-      /// Gets a string having a full representation of the passed digits. Compresses child digits already belonging to another one.
+      /// Gets a string having a full representation of the passed digits.
       /// </summary>
       /// <param name="rows">Rows containing the digits to get the string representation from</param>
       /// <param name="column">Column of type string containing the area digits name</param>
       /// <param name="sep">Area separator used for the output</param>
       /// <param name="del">Area range delimiter used for the output</param>
+      /// <param name="compression">Compression method to use</param>
       /// <param name="trimZeros">If <value>True</value> trim the initial zeros, treating the digits as full area codes, so that 0046 becomes 46</param>
       /// <returns>Full representation as string.</returns>
-      public static string TransformAreaDigitsToString(IEnumerable<DataRow> rows, string column, char sep, char del, bool trimZeros = true)
+      public static string TransformAreaDigitsToString(IEnumerable<DataRow> rows, string column, char sep, char del, Compression compression, bool trimZeros = true)
       {
          if (rows == null || !rows.Any())
-            return String.Empty;
+            return string.Empty;
 
          if (!rows.First().Table.Columns.Contains(column))
-            return String.Empty;
+            return string.Empty;
 
-         return TransformAreaDigitsToString(rows, rows.First().Table.Columns[column], sep, del, trimZeros);
+         return TransformAreaDigitsToString(rows, rows.First().Table.Columns[column], sep, del,compression, trimZeros);
       }
    }
 }

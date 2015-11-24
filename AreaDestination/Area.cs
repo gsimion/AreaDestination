@@ -1,9 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Globalization;
+   using System.Collections.Generic;
  
    /// <summary>
    /// Class defining an area.
@@ -23,7 +22,7 @@ namespace AreaDestination
       /// <param name="Id">Id</param>
       /// <param name="code">Area</param>
       public Area(T Id, ulong code)
-         : this(Id, ConvertImplicitly(code), IsPowerOf10(code + 1) ? ((code == 0) ? new Decimal(0.1) : new Decimal(1)) : ConvertImplicitly(code + 1))
+         : this(Id, ConvertImplicitly(code), IsPowerOf10(code + 1) ? ((code == 0) ? new decimal(0.1) : new decimal(1)) : ConvertImplicitly(code + 1))
       {
       }
 
@@ -45,7 +44,7 @@ namespace AreaDestination
       /// <param name="code">Area</param>
       public Area(T Id, string code)
          : this(Id, Convert.ToDecimal(Global.Dot + code.ToString(), CultureInfo.InvariantCulture.NumberFormat),
-         ((code[0] != Zero) && IsPowerOf10(Convert.ToUInt64(code, CultureInfo.InvariantCulture.NumberFormat) + 1)) ? new Decimal(1) : Convert.ToDecimal(Global.Dot + code, CultureInfo.InvariantCulture.NumberFormat) + GetUnit(Convert.ToDecimal(Global.Dot + code, CultureInfo.InvariantCulture.NumberFormat)))
+         ((code[0] != Zero) && IsPowerOf10(Convert.ToUInt64(code, CultureInfo.InvariantCulture.NumberFormat) + 1)) ? new decimal(1) : Convert.ToDecimal(Global.Dot + code, CultureInfo.InvariantCulture.NumberFormat) + GetUnit(Convert.ToDecimal(Global.Dot + code, CultureInfo.InvariantCulture.NumberFormat)))
       {
       }
 
@@ -64,13 +63,13 @@ namespace AreaDestination
       /// <summary>
       /// Creates a new area.
       /// </summary>
-      /// <param name="Id">Id</param>
+      /// <param name="id">Id</param>
       /// <param name="start">Start</param>
       /// <param name="end">End</param>
-      public Area(T Id, Decimal start, Decimal end)
+      public Area(T id, decimal start, decimal end)
          : base(start, end)
       {
-         this.Id = Id;
+         this.Id = id;
       }
 
       /// <summary>
@@ -86,9 +85,9 @@ namespace AreaDestination
       /// </summary>
       /// <param name="del">Range delimiter</param>
       /// <returns>String representation of the <see cref="ZeroOneAreaRange"/>area range</returns>
-      public String ToString(char del)
+      public string ToString(char del)
       {
-         return this.ToString().Replace(Global.Del, del);
+         return ToString().Replace(Global.Del, del);
       }
 
       /// <summary>
@@ -127,7 +126,7 @@ namespace AreaDestination
    /// Class comparer for start of a generic area, 
    /// so that when the default comparer return equality, is checking in the deepness of the start value.
    /// </summary>
-   internal class AreaStartComparer : IComparer<Decimal>
+   internal class AreaStartComparer : IComparer<decimal>
    {
       /// <summary>
       /// Compare two areas starting decimals, using the default comparer for decimal.
@@ -137,12 +136,12 @@ namespace AreaDestination
       /// <param name="x">First value</param>
       /// <param name="y">Second value</param>
       /// <returns>Comparison result</returns>
-      public int Compare(Decimal x, Decimal y)
+      public int Compare(decimal x, decimal y)
       {
-         int defaultComparison = Decimal.Compare(x, y);
+         int defaultComparison = decimal.Compare(x, y);
          if (defaultComparison != 0)
-            return defaultComparison ;
-         return Decimal.Compare(ZeroOneDecimalRange.GetUnit(y), ZeroOneDecimalRange.GetUnit(x));
+            return defaultComparison;
+         return decimal.Compare(ZeroOneDecimalRange.GetUnit(y), ZeroOneDecimalRange.GetUnit(x));
       }
 
    }

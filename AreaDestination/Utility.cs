@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+
    /// <summary>
    /// Utility class overriding checks for defaults.
    /// </summary>
@@ -18,7 +15,7 @@ namespace AreaDestination
       public static object Default()
       {
          if (typeof(T) == typeof(string))
-            return String.Empty;
+            return string.Empty;
          else
             return default(T);
       }

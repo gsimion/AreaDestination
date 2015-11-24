@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-using System.Data;
-using System.Collections;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Text;
+   using System.Globalization;
+   using System.Data;
+   using System.Collections;
+
    /// <summary>
    /// Class representing a destination set, that is a set area code ranges grouped in destinations
    /// One destination is explicitly defined by a set of area code ranges that are not overlapping with 
@@ -18,6 +18,9 @@ namespace AreaDestination
    {
       private Dictionary<T, ExplicitDestination<T>> _destinations = new Dictionary<T, ExplicitDestination<T>>();
 
+      /// <summary>
+      /// Creates a new explicit destination set.
+      /// </summary>
       public ExplicitDestinationSet()
       {
       }
@@ -67,7 +70,7 @@ namespace AreaDestination
       /// <summary>
       /// Adds an area to a destination, or create a new destination if it does not exists
       /// </summary>
-      /// <param name="i">The name of the destination to update</param>
+      /// <param name="id">The id of the destination to update</param>
       /// <param name="a">The area code to add</param>
       public override void AddArea(T id, ulong a)
       {
@@ -89,7 +92,6 @@ namespace AreaDestination
       /// <summary>
       /// Removes an area from a destination if it exists
       /// </summary>
-      /// <param name="i">The name of the destination to update</param>
       /// <param name="code">The area code to add</param>
       public override void RemoveArea(ulong code)
       {
@@ -136,7 +138,7 @@ namespace AreaDestination
       /// </summary>
       /// <param name="areas">Full area representation, where area code separator is ',' and range delimiter is '-'</param>
       /// <returns>Area matrix</returns>
-      protected UInt64[][] GetAreasAndRanges(string areas)
+      protected ulong[][] GetAreasAndRanges(string areas)
       {
          return GetAreasAndRanges(areas, Sep, Del);
       }
@@ -165,15 +167,15 @@ namespace AreaDestination
       /// </summary>
       /// <param name="b">The destination set to be mapped to</param>
       /// <returns>The result of the mapping between the two sets</returns>
-      public DestinationSetBase.CMappingResult<T> MapToDestinationSet(ExplicitDestinationSet<T> b)
+      public DestinationSetBase.MappingResult<T> MapToDestinationSet(ExplicitDestinationSet<T> b)
       {
-         IArea<T>[] fromExplicit = this.ExplicitAreas.ToArray();
+         IArea<T>[] fromExplicit = ExplicitAreas.ToArray();
          IArea<T>[] toExplicit = b.ExplicitAreas.ToArray();
 
          int destToAreaIndex = 0;
          int destFromAreaIndex = 0;
          IArea<T> rangeFrom, rangeTo;
-         DestinationSetBase.CMappingResult<T> mapRes = new DestinationSetBase.CMappingResult<T>();
+         DestinationSetBase.MappingResult<T> mapRes = new DestinationSetBase.MappingResult<T>();
 
          while (destFromAreaIndex < fromExplicit.Length && destToAreaIndex < toExplicit.Length)
          {

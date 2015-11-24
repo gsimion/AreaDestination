@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Text;
+   using System.Globalization;
+
    /// <summary>
    /// Class representing a destination set.
    /// The class does not check for child areas overlapping, but does not allow same implicit areas to be assigned twice within the destinaiton set.
@@ -19,13 +19,12 @@ namespace AreaDestination
 
       private class Node<T0>
       {
-         public Node<T0> next;
-         public T0 data;
+         public Node<T0> next { get; set; }
+         public T0 data { get; private set; }
 
          public Node(T0 a)
+            : this(a, null)
          {
-            data = a;
-            next = null;
          }
 
          public Node(T0 a, Node<T0> n)
@@ -67,6 +66,9 @@ namespace AreaDestination
       private readonly Dictionary<ulong, T> _uniqueAreaCodes = new Dictionary<ulong, T>();
       private readonly List<Area<T>> _areas;
 
+      /// <summary>
+      /// Creates a new destination set.
+      /// </summary>
       public DestinationSet()
       {
          _areas = new List<Area<T>>();
@@ -162,7 +164,7 @@ namespace AreaDestination
             if (_uniqueAreaCodes[code].Equals(UndefinedDestinationId))
                RemoveArea(code);
             else
-               throw new InvalidOperationException(String.Format(Properties.Resources.msgAreaCodeAlreadyExistsFormatted, id, code, _uniqueAreaCodes[code]));
+               throw new InvalidOperationException(string.Format(Properties.Resources.msgAreaCodeAlreadyExistsFormatted, id, code, _uniqueAreaCodes[code]));
          }
 
          if (!_implicitDests.ContainsKey(id))
@@ -204,7 +206,7 @@ namespace AreaDestination
                _uniqueAreaCodes.Remove(ea);
          }
          _implicitDests[id].Clear();
-         foreach (ulong a in getSingleAreaCodes(areas))
+         foreach (ulong a in GetSingleAreaCodes(areas))
          {
             if (_uniqueAreaCodes.ContainsKey(a))
             {
@@ -231,9 +233,8 @@ namespace AreaDestination
       /// </summary>
       /// <param name="areas">The string representing the ranges eg "33,334-336"</param>
       /// <returns>A list of individual area codes, eg 33,334,335,336.</returns>
-      private List<ulong> getSingleAreaCodes(string areas)
+      private List<ulong> GetSingleAreaCodes(string areas)
       {
-         ulong[][] areaRanges = GetAreasAndRanges(areas, Sep, Del);
          List<ulong> singleCodes = new List<ulong>();
          ulong[][] areamatrix = GetAreasAndRanges(areas, Sep, Del);
          foreach (ulong[] area in areamatrix)
@@ -292,15 +293,15 @@ namespace AreaDestination
       /// </summary>
       /// <param name="b">The destination set to be mapped to</param>
       /// <returns>The result of the mapping between the two sets</returns>
-      public DestinationSetBase.CMappingResult<T> MapToDestinationSet(DestinationSet<T> b)
+      public DestinationSetBase.MappingResult<T> MapToDestinationSet(DestinationSet<T> b)
       {
-         IEnumerable<IArea<T>> a_expl = this.ExplicitAreas;
+         IEnumerable<IArea<T>> a_expl = ExplicitAreas;
          IEnumerable<IArea<T>> b_expl = b.ExplicitAreas;
 
          int dbi = 0;
          int dai = 0;
          IArea<T> ra, rb;
-         DestinationSetBase.CMappingResult<T> mapRes = new DestinationSetBase.CMappingResult<T>();
+         DestinationSetBase.MappingResult<T> mapRes = new DestinationSetBase.MappingResult<T>();
 
          while (dai < a_expl.Count() && dbi < b_expl.Count())
          {
@@ -330,7 +331,7 @@ namespace AreaDestination
       /// <returns>The ID of the destination, or undefined</returns>
       public T FindFirstMatchingDestination(ulong code)
       {
-         Decimal a = Convert.ToDecimal(Global.Dot + code.ToString(), CultureInfo.InvariantCulture.NumberFormat);
+         decimal a = Convert.ToDecimal(Global.Dot + code.ToString(), CultureInfo.InvariantCulture.NumberFormat);
          IArea<T> aRange = ExplicitAreas.FirstOrDefault(c => c.Start <= a && c.End > a);
          return aRange.Id;
       }
@@ -380,7 +381,7 @@ namespace AreaDestination
       {
          ulong[][] areamatrix = GetAreasAndRanges(area, Sep, Del);
          if (areamatrix.Length != 1 || areamatrix[0].Length > 2)
-            throw new FormatException(String.Format(Properties.Resources.msgUnableToParseAreaStringFormatted, area));
+            throw new FormatException(string.Format(Properties.Resources.msgUnableToParseAreaStringFormatted, area));
          if (areamatrix[0].Length == 1)
             return FindDestinations(new Area<T>((T)Utility<T>.Default(), areamatrix[0][0]));
          else

@@ -366,7 +366,7 @@ namespace AreaDestinationTest
          ds1.AddArea("b", 332);
          ds2.AddArea("a", 33);
          ds2.AddArea("b", 332);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual<int>(2, maps.Count);
          Assert.AreEqual<string>("330-331,333-339", maps.GetMappedAreas("a", "a"));
@@ -382,7 +382,7 @@ namespace AreaDestinationTest
          ds1.AddArea("b", 332);
          ds2.AddArea("a", 33);
          ds2.AddArea("b", 334);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual<int>(3, maps.Count);
          Assert.AreEqual<string>("330-331,333,335-339", maps.GetMappedAreas("a", "a"));
@@ -407,7 +407,7 @@ namespace AreaDestinationTest
          ds1.AddArea("ds1b", 332);
          ds2.AddArea("ds2a", 33);
          ds2.AddArea("ds2b", 334);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual<int>(3, maps.Count);
          Assert.AreEqual<string>("330-331,333,335-339", maps.GetMappedAreas("ds1a", "ds2a"));
@@ -440,7 +440,7 @@ namespace AreaDestinationTest
          ds2.AddArea("AFGHANISTAN-MOBILE ETISALAT", 9378);
          //do not include AFGHANISTAN-MOBILE ROSHAN
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual<int>(5, maps.Count);
          Assert.AreEqual<int>(2, maps.LostAreaCodes.Count);
@@ -489,7 +489,7 @@ namespace AreaDestinationTest
          ds2.AddArea("ALGERIA-MOBILE WATANIYA", 2135);
          ds2.AddArea("AMERICAN SAMOA", 1684);
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(15, maps.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<int>(0, maps.LostAreaCodes.Count, "Lost areas");
          Assert.AreEqual<int>(0, maps.GainedAreaCodes.Count, "Gained areas");
@@ -515,7 +515,7 @@ namespace AreaDestinationTest
          ds2.UpdateDestination("SWEDEN-MOBILE 1", "4670-4675");
          ds2.UpdateDestination("SWEDEN-MOBILE 2", "4676-4678");
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(3, maps.GetMappedDestination("SWEDEN-MOBILE").Count());
          Assert.AreEqual<int>(1, maps.GetMappedDestination("SWEDEN").Count());
          Assert.IsTrue(maps["SWEDEN"].IsFullyMapped);
@@ -543,7 +543,7 @@ namespace AreaDestinationTest
          ds2.AddArea("AFGHANISTAN-FIX", 93);
          ds2.AddArea("ALBANIA", 355);
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          //maps
          Assert.AreEqual<int>(8, maps.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<string>("930-936,938-939", maps.Maps[new KeyValuePair<string, string>("AFGHANISTAN-FIX", "AFGHANISTAN-FIX")].ToString());
@@ -651,11 +651,11 @@ namespace AreaDestinationTest
       {
          ExplicitDestinationSet<string> DestinationSet = new ExplicitDestinationSet<string>();
          DestinationSet.UpdateDestination("destination", "00000000001-3,0000000000000000005,6");
-         IEnumerable<ulong> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(1));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(2));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(5));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(6));
+         IEnumerable<UInt64> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(1));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(2));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(5));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(6));
       }
 
       [TestMethod, Description("Asserts that explicit destination set can update a destination with unconventional range correclty")]
@@ -663,20 +663,20 @@ namespace AreaDestinationTest
       {
          ExplicitDestinationSet<string> DestinationSet = new ExplicitDestinationSet<string>();
          DestinationSet.UpdateDestination("destination", "1, 2 ,3-5, 4-675");
-         IEnumerable<ulong> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
+         IEnumerable<UInt64> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
 
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(1));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(2));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(3));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(4));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(5));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(1));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(2));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(3));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(4));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(5));
 
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(63));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(675));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(63));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(675));
 
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(6));
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(7));
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(23));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(6));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(7));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(23));
       }
 
       [TestMethod, Description("Asserts that empty explicit destination set contains no ranges")]
@@ -712,18 +712,18 @@ namespace AreaDestinationTest
       {
          ExplicitDestinationSet<string> DestinationSet = new ExplicitDestinationSet<string>();
          DestinationSet.UpdateDestination("destination", "1-123456789");
-         IEnumerable<ulong> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
+         IEnumerable<UInt64> ExpandedAreas = DestinationSet.Destinations["destination"].FullExpandedAreas;
 
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(10));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(12342));
-         Assert.IsTrue(ExpandedAreas.Contains<ulong>(12345678));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(10));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(12342));
+         Assert.IsTrue(ExpandedAreas.Contains<UInt64>(12345678));
 
          //Should not have "1", since not complete "1" in the range. 13 and so on are not part of the area codes.
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(1));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(1));
 
          // should not have these area codes. The first one is because the area code is ending with 9 and therefore the complete parent should be part
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(123456782));
-         Assert.IsFalse(ExpandedAreas.Contains<ulong>(12346));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(123456782));
+         Assert.IsFalse(ExpandedAreas.Contains<UInt64>(12346));
       }
 
       [TestMethod, Description("Asserts that string representation is correct with multiple updates")]

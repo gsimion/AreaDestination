@@ -1,15 +1,21 @@
-﻿using System;
-using System.Globalization;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Globalization;
+
    /// <summary>
    /// Class defining an area range between 0 and 1.
    /// Range is hold as [start,end).
    /// </summary>
    public class ZeroOneAreaRange : ZeroOneDecimalRange, IZeroOneAreaRange
    {
+      /// <summary>
+      /// Zero.
+      /// </summary>
       protected const Char Zero = '0';
+      /// <summary>
+      /// Nine.
+      /// </summary>
       protected const Char Nine = '9';
 
       /// <summary>
@@ -17,13 +23,13 @@ namespace AreaDestination
       /// </summary>
       /// <param name="start">Start</param>
       /// <param name="end">End</param>
-      public ZeroOneAreaRange(Decimal start, Decimal end)
+      public ZeroOneAreaRange(decimal start, decimal end)
          : base(start, end)
       {
       }
 
       /// <summary>
-      /// Creates a area range where <seealso cref="Start"/>start = 0 and <seealso cref="End"/>end = 1.
+      /// Creates a area range where start = 0 and end = 1.
       /// </summary>
       public ZeroOneAreaRange()
          : base()
@@ -44,7 +50,7 @@ namespace AreaDestination
                _start = _start + new string(Zero, _end.Length - _start.Length);
             if (_end.Length < _start.Length)
                _end = _end + new string(Nine, _start.Length - _end.Length);
-            if ((Start != 0 && Start + GetUnit(Start) == End) || (String.Equals(_start, _end, StringComparison.InvariantCulture)))
+            if ((Start != 0 && Start + GetUnit(Start) == End) || (string.Equals(_start, _end, StringComparison.InvariantCulture)))
                return _start;
             return _start + Global.Del + _end;
          }
@@ -85,7 +91,7 @@ namespace AreaDestination
       /// <summary>
       /// Checks whether a value falls in area range. Include partial intersections.
       /// </summary>
-      public bool InRange(Decimal value, bool inclIntersection)
+      public bool InRange(decimal value, bool inclIntersection)
       {
          return InRange(value, value + Smallest, inclIntersection);
       }
@@ -101,7 +107,7 @@ namespace AreaDestination
       /// <summary>
       /// Checks whether a value falls in area range. Include partial intersections.
       /// </summary>
-      public bool InRange(Decimal start, Decimal end, bool inclIntersection)
+      public bool InRange(decimal start, decimal end, bool inclIntersection)
       {
          if (inclIntersection)
             return IsSharingRange(new ZeroOneAreaRange(start, end));
@@ -117,15 +123,21 @@ namespace AreaDestination
    /// </summary>
    public class ZeroOneDecimalRange : Range<Decimal>, IRange<Decimal>
    {
+      /// <summary>
+      /// Decimal format, used for forcing the correct representation in precision.
+      /// </summary>
       public const string DecimalFormat = "0.0########################";
-      protected const Decimal Smallest = 0.0000000000000000000000001m;
+      /// <summary>
+      /// Smallest decimal value handled by the range.
+      /// </summary>
+      protected const decimal Smallest = 0.0000000000000000000000001m;
 
       /// <summary>
       /// Creates a new decimal range in [0,1], where the start is included and the end is excluded.
       /// </summary>
       /// <param name="start">Start</param>
       /// <param name="end">End</param>
-      public ZeroOneDecimalRange(Decimal start, Decimal end)
+      public ZeroOneDecimalRange(decimal start, decimal end)
          : base(start, end)
       {
          if (start < 0 || end > 1)
@@ -135,7 +147,7 @@ namespace AreaDestination
       }
 
       /// <summary>
-      /// Creates a decimal range where <seealso cref="Start"/>start = 0 and <seealso cref="End"/>end = 1.
+      /// Creates a decimal range where start = 0 and end = 1.
       /// </summary>
       public ZeroOneDecimalRange()
          : base(0, 1)
@@ -155,10 +167,10 @@ namespace AreaDestination
       /// </summary>
       /// <param name="value">Value to get the least important unit from</param>
       /// <returns>Least important unit</returns>
-      public static Decimal GetUnit(Decimal value)
+      public static decimal GetUnit(decimal value)
       {
-         int iPrecision = BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
-         Decimal dcUnit = Decimal.One;
+         int iPrecision = BitConverter.GetBytes(decimal.GetBits(value)[3])[2];
+         Decimal dcUnit = decimal.One;
          while (iPrecision > 0)
          {
             dcUnit /= 10;
@@ -168,20 +180,20 @@ namespace AreaDestination
       }
 
       /// <summary>
-      /// Converts implicitly a UInt64 value to a decimal value between 0 and 1, so that 123 is converted to 0.123.
+      /// Converts implicitly a ulong value to a decimal value between 0 and 1, so that 123 is converted to 0.123.
       /// </summary>
       /// <param name="value">UInt64 value to convert to decimal</param>
       /// <returns>Decimal [0,1] value</returns>
       /// <remarks>Equivalent to Convert.ToDecimal("." + value.ToString(), CultureInfo.InvariantCulture.NumberFormat) for decimal in [0,1]</remarks>
-      public static Decimal ConvertImplicitly(ulong value)
+      public static decimal ConvertImplicitly(ulong value)
       {
-         Decimal dcValue = (Decimal)value;
-         Int32[] bytes = Decimal.GetBits(dcValue);
-         return new Decimal(bytes[0], bytes[1], bytes[2], false, GetMostSignificantPosition(value));
+         decimal dcValue = (decimal)value;
+         int[] bytes = decimal.GetBits(dcValue);
+         return new decimal(bytes[0], bytes[1], bytes[2], false, GetMostSignificantPosition(value));
       }
 
       /// <summary>
-      /// Gets the position of the most significant digit belonging to a UInt64 value.
+      /// Gets the position of the most significant digit belonging to a ulong value.
       /// </summary>
       /// <param name="value">UInt64 value</param>
       /// <returns>Position of the most significant digit</returns>
@@ -198,11 +210,11 @@ namespace AreaDestination
       }
 
       /// <summary>
-      /// Converts implicitly a Decimal [0,1] value to a UInt64 value, so that 0.123 is converted to 123.
+      /// Converts implicitly a Decimal [0,1] value to a ulong value, so that 0.123 is converted to 123.
       /// </summary>
-      /// <param name="value">Decimal value in [0,1] to convert to UInt64</param>
+      /// <param name="value">Decimal value in [0,1] to convert to ulong</param>
       /// <returns>UInt64 value</returns>
-      public static ulong ConvertImplicitly(Decimal value)
+      public static ulong ConvertImplicitly(decimal value)
       {
          if (value.Equals(0))
             return 0;

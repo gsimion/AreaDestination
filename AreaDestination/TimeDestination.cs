@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AreaDestination
 {
+   using System.Linq;
+   using System.Text;
+
    using DatesSet = HashSet<DateTime>;
 
    /// <summary>
@@ -55,6 +56,8 @@ namespace AreaDestination
          /// Adds an area code to the destination.
          /// </summary>
          /// <param name="code">Area code to add</param>
+         /// <param name="validFrom">Area code valid from</param> 
+         /// <param name="validUntil">Area code valid until</param> 
          internal void AddArea(ulong code, DateTime validFrom, DateTime validUntil)
          {
             if (!_timeAreas.ContainsKey(code))
@@ -133,7 +136,7 @@ namespace AreaDestination
             public string Id { get; set; }
             public ulong Area { get; private set; }
 
-            public TimeArea(UInt64 area, DateTime vf, DateTime vu)
+            public TimeArea(ulong area, DateTime vf, DateTime vu)
                : base(vf, vu)
             {
                Area = area;

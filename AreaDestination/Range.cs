@@ -1,15 +1,21 @@
-﻿using System;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+
    /// <summary>
    /// Class defining a generic range.
    /// </summary>
    public abstract class Range<T> : IRange<T> where T : IComparable
    {
+      /// <summary>
+      /// Start of the range.
+      /// </summary>
       public T Start { get; set; }
+      /// <summary>
+      /// End of the range.
+      /// </summary>
       public T End { get; set; }
-      
+
       /// <summary>
       /// Creates a new range.
       /// </summary>
@@ -60,5 +66,5 @@ namespace AreaDestination
       /// Creates a new instance of Range object with the same properties.
       /// </summary>
       public abstract object Clone();
-   } 
+   }
 }

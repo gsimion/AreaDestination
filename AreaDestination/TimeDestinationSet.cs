@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AreaDestination
 {
+   using System.Linq;
+
    using DatesSet = HashSet<DateTime>;
    using ValidityPeriod = KeyValuePair<bool, DateRange>;
 
@@ -11,7 +12,6 @@ namespace AreaDestination
    /// Class representing a destination set with the extended time concept, as an abstraction of destination set with the time dimension, i.e. time destination set is a set of destination sets across time.
    /// One destination is defined by a set of unique area codes. Preserves all the destinations implicit representation.
    /// </summary>
-   /// <typeparam name="T">Type of destination ID</typeparam>
    public partial class TimeDestinationSet<T> where T : IComparable
    {
       /// <summary>
@@ -93,6 +93,11 @@ namespace AreaDestination
          _timeDestinations[id].AddArea(code, vf, vu);
       }
 
+      /// <summary>
+      /// Gets a destination set that is corresponding to a picture of the time destination set at a given date.
+      /// </summary>
+      /// <param name="t">Time</param>
+      /// <returns>Destination set at the passed time</returns>
       public DestinationSet<T> GetDestinationSetAtDate(DateTime t)
       {
          throw new NotImplementedException();
@@ -104,32 +109,41 @@ namespace AreaDestination
       /// <param name="time">Date for the mapping</param>
       /// <param name="toTDS">Time destination set to map to</param>
       /// <returns>Mapping at date for the destination set against another destination set</returns>
-      public DestinationSetBase.CMappingResult<T> MapToDestinationSetAtDate(DateTime time, TimeDestinationSet<T> toTDS)
+      public DestinationSetBase.MappingResult<T> MapToDestinationSetAtDate(DateTime time, TimeDestinationSet<T> toTDS)
       {
-         DestinationSet<T> from = this.GetDestinationSetAtDate(time);
+         DestinationSet<T> from = GetDestinationSetAtDate(time);
          DestinationSet<T> to = toTDS.GetDestinationSetAtDate(time);
          return from.MapToDestinationSet(to);
       }
 
-      public List<KeyValuePair<DateTime, DestinationSetBase.CMappingResult<T>>> MapToDestinationSet(TimeDestinationSet<T> toTDS, DateTime dtDate)
+      /// <summary>
+      /// Maps the destination set to another destination set.
+      /// </summary>
+      /// <param name="toTDS">Destination set to map against</param>
+      /// <param name="dtDate">Time</param>
+      /// <returns>Result of the mapping between the two destination set at the given time</returns>
+      public List<KeyValuePair<DateTime, DestinationSetBase.MappingResult<T>>> MapToDestinationSet(TimeDestinationSet<T> toTDS, DateTime dtDate)
       {
 
          DatesSet uniquePointInTime = new DatesSet();
-         foreach (TimeDestination td in this._timeDestinations.Values)
+         foreach (TimeDestination td in _timeDestinations.Values)
             foreach (DateTime dt in td.DestinationDateChanges)
                uniquePointInTime.Add(dt);
          foreach (TimeDestination td in toTDS._timeDestinations.Values)
             foreach (DateTime dt in td.DestinationDateChanges)
                uniquePointInTime.Add(dt);
-         List<KeyValuePair<DateTime, DestinationSetBase.CMappingResult<T>>> res = new List<KeyValuePair<DateTime, DestinationSetBase.CMappingResult<T>>>();
+         List<KeyValuePair<DateTime, DestinationSetBase.MappingResult<T>>> res = new List<KeyValuePair<DateTime, DestinationSetBase.MappingResult<T>>>();
          foreach (DateTime dt in uniquePointInTime.ToList().OrderBy(c => c))
-            res.Add(new KeyValuePair<DateTime, DestinationSetBase.CMappingResult<T>>(dt, MapToDestinationSetAtDate(dt, toTDS)));
+            res.Add(new KeyValuePair<DateTime, DestinationSetBase.MappingResult<T>>(dt, MapToDestinationSetAtDate(dt, toTDS)));
          return res;
 
       }
 
       #region range collection manipulator
 
+      /// <summary>
+      /// Range collection manipulator.
+      /// </summary>
       public static class RangeCollectionManipulator<T2> where T2 : Range<DateTime>, ICloneable
       {
          private class Node<K>
@@ -170,6 +184,11 @@ namespace AreaDestination
             return head;
          }
 
+         /// <summary>
+         /// Splits ranges.
+         /// </summary>
+         /// <param name="ranges">Ranges to split</param>
+         /// <returns>Split ranges</returns>
          public static List<T2> SplitRanges(IEnumerable<T2> ranges)
          {
             var sortedAreas = ranges.OrderBy(c => c.Start);
@@ -206,6 +225,11 @@ namespace AreaDestination
             return explArea;
          }
 
+         /// <summary>
+         /// Coalesces ranges.
+         /// </summary>
+         /// <param name="ranges">Ranges to coalesce</param>
+         /// <returns>Coalesces ranges</returns>
          public static List<T2> CoalesceRanges(IEnumerable<T2> ranges)
          {
             var sortedAreas = ranges.OrderBy(c => c.Start);

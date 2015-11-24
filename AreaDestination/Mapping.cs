@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+
+   /// <summary>
+   /// Abstract class representing a generic destination set.
+   /// </summary>
    public abstract partial class DestinationSetBase
    {
       /// <summary>
@@ -99,7 +101,7 @@ namespace AreaDestination
                   curArea.End = a.End;
                }
             }
-            return String.Join(new string(Global.Sep, 1), compactAreas.Select(c => c.ToString()).ToArray());
+            return string.Join(new string(Global.Sep, 1), compactAreas.Select(c => c.ToString()).ToArray());
          }
       }
 
@@ -108,7 +110,7 @@ namespace AreaDestination
       /// destinations in the destination set.
       /// </summary>
       /// <typeparam name="T">Type of destination ID</typeparam>
-      public class CMappingResult<T> where T : IComparable 
+      public class MappingResult<T> where T : IComparable 
       {
          /// <summary>
          /// Structure containing the mapping state.
@@ -177,14 +179,14 @@ namespace AreaDestination
          /// Gets a string representation of the mapped areas from a destination to another.
          /// </summary>
          /// <param name="from">Destination id from</param>
-         /// <param name="to"><Destionation id to/param>
+         /// <param name="to">Destionation id to</param>
          /// <returns>String representation of the mapped areas if a map exists, empty string otherwise</returns>
          public string GetMappedAreas(T from, T to)
          {
             KeyValuePair<T, T> key = new KeyValuePair<T, T>(from, to);
             if (Maps.ContainsKey(key))
                return Maps[key].ToString();
-            return String.Empty;
+            return string.Empty;
          }
 
          /// <summary>
@@ -205,7 +207,7 @@ namespace AreaDestination
          /// <summary>
          /// Creates a new instance of the object containing the results of a mapping between two destination sets. 
          /// </summary>
-         public CMappingResult()
+         public MappingResult()
          {
             Maps = new Dictionary<KeyValuePair<T, T>, IMapping<T>>();
          }
@@ -214,7 +216,7 @@ namespace AreaDestination
          /// Gets the mapping state of a given destination id from.
          /// </summary>
          /// <param name="id">Destination id from</param>
-         /// <returns>Map state, undefined if now found<returns>
+         /// <returns>Map state, undefined if now found</returns>
          public TState this[T id]
          {
             get

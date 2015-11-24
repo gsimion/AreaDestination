@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Text;
+   using System.Globalization;
+   
    /// <summary>
    /// Class representing a destination as a set of full explicit area ranges. 
    /// Supports adding ranges in implicit format and getting a compacted version of it.
    /// </summary>
    /// <typeparam name="T">Type of destination ID</typeparam>
-   public class ExplicitDestination<T> : AreaLine<T>, IDestination<T> where T: IComparable
+   public class ExplicitDestination<T> : AreaLine<T>, IDestination<T> where T : IComparable
    {
       /// <summary>
       /// Destination Id.
@@ -127,13 +127,13 @@ namespace AreaDestination
       {
          IArea<T>[] areas = Areas.ToArray();
          if (areas.Length == 0)
-            return String.Empty;
+            return string.Empty;
          else if (areas.Length == 1)
             return areas[0].ToString();
          else
          {
             StringBuilder sb = new StringBuilder();
-            string res = areas.Aggregate(sb, (builder, area) => builder.Append(area.ToString()).Append(Global.Sep)).ToString().TrimEnd(new char[]{Global.Sep});
+            string res = areas.Aggregate(sb, (builder, area) => builder.Append(area.ToString()).Append(Global.Sep)).ToString().TrimEnd(new char[] { Global.Sep });
             return res;
          }
       }

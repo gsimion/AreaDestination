@@ -229,3 +229,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+AreaDestinationTest/StyleCopViolations.xml
+AreaDestination/AreaDestination.OpenCover.Settings

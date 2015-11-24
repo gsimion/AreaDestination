@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
-using System.Globalization;
-using System.Text;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Collections;
+   using System.Globalization;
+   using System.Text;
 
    /// <summary>
    /// Object implementing the abstraction of area collection represented as line segments.
@@ -19,7 +18,7 @@ namespace AreaDestination
       /// <summary>
       /// Sorted set containing the segments, not overlapping each other and ordered by start of range.
       /// </summary>
-      private readonly SortedSet<CZeroOneSegment> _segments = new SortedSet<CZeroOneSegment>();
+      private readonly SortedSet<ZeroOneSegment> _segments = new SortedSet<ZeroOneSegment>();
 
       /// <summary>
       /// Stores the min and max value of the covered segments.
@@ -35,7 +34,8 @@ namespace AreaDestination
       /// Creates a new area line, given a list of areas.
       /// </summary>
       /// <param name="areas">List of areas</param>
-      public AreaLine(IEnumerable<Area<T>> areas) : this()
+      public AreaLine(IEnumerable<Area<T>> areas)
+         : this()
       {
          foreach (IArea<T> area in areas)
             Add(area);
@@ -97,9 +97,9 @@ namespace AreaDestination
       /// </summary>
       /// <param name="start">Start (included)</param>
       /// <param name="end">End (excluded)</param>
-      public void Add(Decimal start, Decimal end)
+      public void Add(decimal start, decimal end)
       {
-         CZeroOneSegment segmentToAdd = new CZeroOneSegment(start, end);
+         ZeroOneSegment segmentToAdd = new ZeroOneSegment(start, end);
          // check if outside boundaries for avoiding consuming checks
          if (_coveredRange.Start < _coveredRange.End && (_coveredRange.Start <= end || _coveredRange.End >= start))
          {
@@ -116,11 +116,11 @@ namespace AreaDestination
             }
 
             // check start: is new interval starting within a existing segment?
-            CZeroOneSegment startSegment = _segments.Where(x => ((x.Start <= start) && (x.End >= start))).FirstOrDefault();
+            ZeroOneSegment startSegment = _segments.Where(x => ((x.Start <= start) && (x.End >= start))).FirstOrDefault();
             if ((startSegment != null) && (startSegment.End < end))
             {
                DeleteAllSegmentWithinRange(startSegment.End, end);
-               CZeroOneSegment merge = (from seg in _segments where seg.StartsWith(end) select seg).FirstOrDefault();
+               ZeroOneSegment merge = (from seg in _segments where seg.StartsWith(end) select seg).FirstOrDefault();
                if (merge != null)
                {
                   end = merge.End;
@@ -131,11 +131,11 @@ namespace AreaDestination
                return;
             }
             // check end: is new interval ending within an existing segment?
-            CZeroOneSegment endSegment = _segments.Where(x => ((x.Start <= end) && (x.End >= end))).FirstOrDefault();
+            ZeroOneSegment endSegment = _segments.Where(x => ((x.Start <= end) && (x.End >= end))).FirstOrDefault();
             if ((endSegment != null) && endSegment.Start > start)
             {
                DeleteAllSegmentWithinRange(start, endSegment.Start);
-               CZeroOneSegment merge = (from seg in _segments where seg.EndsWith(start) select seg).FirstOrDefault();
+               ZeroOneSegment merge = (from seg in _segments where seg.EndsWith(start) select seg).FirstOrDefault();
                if (merge != null)
                {
                   start = merge.Start;
@@ -168,26 +168,26 @@ namespace AreaDestination
       /// </summary>
       /// <param name="start">Start (included)</param>
       /// <param name="end">End (excluded)</param>
-      public void Remove(Decimal start, Decimal end)
+      public void Remove(decimal start, decimal end)
       {
          // optimize and update min and max values 
          if ((end < _coveredRange.Start) || (start > _coveredRange.End))
             return;
 
-         if (end > _coveredRange.End) 
+         if (end > _coveredRange.End)
             _coveredRange.End = end;
-         if (start < _coveredRange.Start) 
+         if (start < _coveredRange.Start)
             _coveredRange.Start = start;
 
          // delete all the sub segments included in the removal interval
          DeleteAllSegmentWithinRange(start, end);
-         
+
          // any segment need to be split?
-         CZeroOneSegment segmentToSplit = (from s in _segments where s.Start < start && s.End > end select s).FirstOrDefault();
+         ZeroOneSegment segmentToSplit = (from s in _segments where s.Start < start && s.End > end select s).FirstOrDefault();
          if (segmentToSplit != null)
          {
-            CZeroOneSegment First = new CZeroOneSegment(segmentToSplit.Start, start);
-            CZeroOneSegment Second = new CZeroOneSegment(end, segmentToSplit.End);
+            ZeroOneSegment First = new ZeroOneSegment(segmentToSplit.Start, start);
+            ZeroOneSegment Second = new ZeroOneSegment(end, segmentToSplit.End);
             _segments.Remove(segmentToSplit);
             _segments.Add(First);
             _segments.Add(Second);
@@ -197,7 +197,7 @@ namespace AreaDestination
          // resize start
          while (true)
          {
-            CZeroOneSegment segment = (from s in _segments where s.Start >= start && s.Start < end select s).FirstOrDefault();
+            ZeroOneSegment segment = (from s in _segments where s.Start >= start && s.Start < end select s).FirstOrDefault();
             if (segment == null)
                break;
             segment.Start = end;
@@ -205,7 +205,7 @@ namespace AreaDestination
          // resize end
          while (true)
          {
-            CZeroOneSegment segment = (from s in _segments where s.End > start && s.End <= end select s).FirstOrDefault();
+            ZeroOneSegment segment = (from s in _segments where s.End > start && s.End <= end select s).FirstOrDefault();
             if (segment == null)
                break;
             segment.End = start;
@@ -217,11 +217,11 @@ namespace AreaDestination
       /// </summary>
       /// <param name="start">Start</param>
       /// <param name="end">End</param>
-      private void DeleteAllSegmentWithinRange(Decimal start, Decimal end)
+      private void DeleteAllSegmentWithinRange(decimal start, decimal end)
       {
          while (true)
          {
-            CZeroOneSegment segment = (from s in _segments where s.Start >= start && s.End <= end select s).FirstOrDefault();
+            ZeroOneSegment segment = (from s in _segments where s.Start >= start && s.End <= end select s).FirstOrDefault();
             if (segment == null)
                return;
             _segments.Remove(segment);
@@ -233,11 +233,11 @@ namespace AreaDestination
       /// </summary>
       /// <param name="prevEnd">Previus end</param>
       /// <param name="newEnd">End to resize to</param>
-      private void ResizeEnd(Decimal prevEnd, Decimal newEnd)
+      private void ResizeEnd(decimal prevEnd, decimal newEnd)
       {
          if (prevEnd < newEnd)
             throw new ArgumentException(Properties.Resources.msgUpdateNewEnd);
-         CZeroOneSegment endSegment = _segments.Where(x => ((x.End <= prevEnd) && (x.End >= newEnd))).FirstOrDefault();
+         ZeroOneSegment endSegment = _segments.Where(x => ((x.End <= prevEnd) && (x.End >= newEnd))).FirstOrDefault();
          if (endSegment != null)
             endSegment.End = newEnd;
       }
@@ -247,11 +247,11 @@ namespace AreaDestination
       /// </summary>
       /// <param name="prevStart">Previus start</param>
       /// <param name="newStart">Start to resize to</param>
-      private void UpdateStart(Decimal prevStart, Decimal newStart)
+      private void UpdateStart(decimal prevStart, decimal newStart)
       {
          if (prevStart > newStart)
             throw new ArgumentException(Properties.Resources.msgUpdateNewStart);
-         CZeroOneSegment endSegment = _segments.Where(x => ((x.Start >= prevStart) && (x.Start <= newStart))).FirstOrDefault();
+         ZeroOneSegment endSegment = _segments.Where(x => ((x.Start >= prevStart) && (x.Start <= newStart))).FirstOrDefault();
          if (endSegment != null)
             endSegment.Start = newStart;
       }
@@ -262,7 +262,7 @@ namespace AreaDestination
       /// <returns>Collection of non overlapping ranges, ordered by start</returns>
       public IEnumerable<ZeroOneDecimalRange> GetRanges()
       {
-         List<ZeroOneDecimalRange> ranges = (from CZeroOneSegment segment in _segments select new ZeroOneDecimalRange(segment.Start, segment.End)).ToList();
+         List<ZeroOneDecimalRange> ranges = (from ZeroOneSegment segment in _segments select new ZeroOneDecimalRange(segment.Start, segment.End)).ToList();
          return ranges;
       }
 
@@ -273,10 +273,10 @@ namespace AreaDestination
       protected IEnumerable<IArea<T>> GetExplicitAreas()
       {
          List<IArea<T>> areas = new List<IArea<T>>();
-         foreach (CZeroOneSegment segment in _segments)
+         foreach (ZeroOneSegment segment in _segments)
          {
-            foreach (CZeroOneSegment explodedsegment in ExplodeSegment(segment))
-               areas.Add(new Area<T>((T)Utility<T>.Default(), explodedsegment.Start, explodedsegment.End ));                   
+            foreach (ZeroOneSegment explodedsegment in ExplodeSegment(segment))
+               areas.Add(new Area<T>((T)Utility<T>.Default(), explodedsegment.Start, explodedsegment.End));
          }
          return areas.OrderBy(x => x.Start);
       }
@@ -286,9 +286,9 @@ namespace AreaDestination
       /// </summary>
       /// <param name="segment">Segment to be exploded</param>
       /// <returns>Collection of exploded segments</returns>
-      private static IEnumerable<CZeroOneSegment> ExplodeSegment(CZeroOneSegment segment)
+      private static IEnumerable<ZeroOneSegment> ExplodeSegment(ZeroOneSegment segment)
       {
-         IList<CZeroOneSegment> list = new List<CZeroOneSegment>();
+         IList<ZeroOneSegment> list = new List<ZeroOneSegment>();
          Explode(segment.Start, segment.End, list);
          return list;
       }
@@ -302,19 +302,19 @@ namespace AreaDestination
       /// <param name="start">Start of generic [0,1] segment</param>
       /// <param name="end">End of generic [0,1] segment</param>
       /// <param name="list">List with explicit segments</param>
-      private static void Explode(Decimal start, Decimal end, IList<CZeroOneSegment> list)
+      private static void Explode(decimal start, decimal end, IList<ZeroOneSegment> list)
       {
          if (start >= end)
             return;
 
-         string sStart = start.ToString(Area<T>.DecimalFormat).Substring(2);
-         string sEnd = end.ToString(Area<T>.DecimalFormat).Substring(2);
+         string sStart = start.ToString(Area<T>.DecimalFormat, CultureInfo.InvariantCulture).Substring(2);
+         string sEnd = end.ToString(Area<T>.DecimalFormat, CultureInfo.InvariantCulture).Substring(2);
 
          int commPrecision = 0;
          while (sStart.Length > commPrecision && sEnd.Length > commPrecision && sStart[commPrecision] == sEnd[commPrecision])
             commPrecision++;
 
-         Decimal newEnd = Decimal.Zero;
+         decimal newEnd = decimal.Zero;
          if (Math.Abs(commPrecision - sStart.Length) <= 1)
          {
             newEnd = (end != 1) ? Convert.ToDecimal(Global.Dot + sEnd.Substring(0, commPrecision + 1), CultureInfo.InvariantCulture.NumberFormat) : end;
@@ -323,9 +323,9 @@ namespace AreaDestination
          else
          {
             newEnd = Convert.ToDecimal(Global.Dot + sStart.Substring(0, sStart.Length - 1), CultureInfo.InvariantCulture.NumberFormat);
-            newEnd += (newEnd != 0) ? CZeroOneSegment.GetUnit(newEnd) : 0.1m;
+            newEnd += (newEnd != 0) ? ZeroOneSegment.GetUnit(newEnd) : 0.1m;
          }
-         list.Add(new CZeroOneSegment(start, newEnd)); // add [a, b1)
+         list.Add(new ZeroOneSegment(start, newEnd)); // add [a, b1)
          Explode(newEnd, end, list); // recursive call for [b1, b), where a < b1 < b
       }
 
@@ -334,9 +334,9 @@ namespace AreaDestination
       /// </summary>
       /// <param name="arealine">Area line to check for overlaps</param>
       /// <returns><value>True</value> if it is overlapping, <value>False</value> otherwise</returns>
-      public Boolean IsOverlapping(AreaLine<T> arealine)
+      public bool IsOverlapping(AreaLine<T> arealine)
       {
-         foreach (CZeroOneSegment segment in arealine._segments)
+         foreach (ZeroOneSegment segment in arealine._segments)
             if (_segments.Any(x => (x.Start <= segment.Start && x.End > segment.Start)) || _segments.Any(x => (x.End >= segment.End && x.Start < segment.End)))
                return true;
          return false;
@@ -346,10 +346,10 @@ namespace AreaDestination
       /// Merges the current instance of area line with another area line.
       /// Adds all the segment of the area line to be merged.
       /// </summary>
-      /// <param name="arealine">Area line to be merged</param>
-      public void Merge(AreaLine<T> arealine)
+      /// <param name="areaLine">Area line to be merged</param>
+      public void Merge(AreaLine<T> areaLine)
       {
-         foreach (CZeroOneSegment segment in arealine._segments)
+         foreach (ZeroOneSegment segment in areaLine._segments)
             Add(segment.Start, segment.End);
       }
 
@@ -360,8 +360,8 @@ namespace AreaDestination
       /// <returns>New area line representing the union of the instance of area line and the area line passed as input</returns>
       public AreaLine<T> Union(AreaLine<T> al)
       {
-         AreaLine<T> areaLine = new AreaLine<T>((from CZeroOneSegment s in _segments select (new Area<T>((T)Utility<T>.Default(), s.Start, s.End))));
-         foreach (Area<T> area in (from CZeroOneSegment s in al._segments select new Area<T>((T)Utility<T>.Default(), s.Start, s.End)))
+         AreaLine<T> areaLine = new AreaLine<T>((from ZeroOneSegment s in _segments select (new Area<T>((T)Utility<T>.Default(), s.Start, s.End))));
+         foreach (Area<T> area in (from ZeroOneSegment s in al._segments select new Area<T>((T)Utility<T>.Default(), s.Start, s.End)))
             areaLine.Add(area);
          return areaLine;
       }
@@ -374,15 +374,15 @@ namespace AreaDestination
       public AreaLine<T> Intersect(AreaLine<T> al)
       {
          AreaLine<T> areaLine = new AreaLine<T>();
-         foreach (CZeroOneSegment parent in _segments)
+         foreach (ZeroOneSegment parent in _segments)
          {
-            foreach (CZeroOneSegment child in al._segments.Where(x => x.Start >= parent.Start))
+            foreach (ZeroOneSegment child in al._segments.Where(x => x.Start >= parent.Start))
             {
                if (child.Start >= parent.End)
                   break;
-               Decimal min = (child.Start > parent.Start) ? child.Start : parent.Start;
-               Decimal max = (child.End < parent.End) ? child.End : parent.End;
-               CZeroOneSegment intersection = new CZeroOneSegment(min, max);
+               decimal min = (child.Start > parent.Start) ? child.Start : parent.Start;
+               decimal max = (child.End < parent.End) ? child.End : parent.End;
+               ZeroOneSegment intersection = new ZeroOneSegment(min, max);
                areaLine._segments.Add(intersection);
                if (max == parent.End)
                   break;
@@ -398,7 +398,7 @@ namespace AreaDestination
       public override string ToString()
       {
          if (_segments.Count == 0)
-            return String.Empty;
+            return string.Empty;
          else if (_segments.Count == 1)
             return _segments.First().ToString();
          else
@@ -412,7 +412,7 @@ namespace AreaDestination
       /// <summary>
       /// Class defining a segment in [0,1].
       /// </summary>
-      private class CZeroOneSegment : ZeroOneDecimalRange, IEqualityComparer<CZeroOneSegment>
+      private class ZeroOneSegment : ZeroOneDecimalRange, IEqualityComparer<ZeroOneSegment>
       {
          private const string A = "a";
          private const string B = "b";
@@ -423,7 +423,7 @@ namespace AreaDestination
          /// </summary>
          /// <param name="start">Start</param>
          /// <param name="end">End</param>
-         public CZeroOneSegment(Decimal start, Decimal end)
+         public ZeroOneSegment(decimal start, decimal end)
             : base(start, end)
          {
          }
@@ -434,7 +434,7 @@ namespace AreaDestination
          /// <returns>Cloned segment</returns>
          public override object Clone()
          {
-            return new CZeroOneSegment(Start, End);
+            return new ZeroOneSegment(Start, End);
          }
 
          /// <summary>
@@ -442,7 +442,7 @@ namespace AreaDestination
          /// </summary>
          /// <param name="a">Segment</param>
          /// <returns>Hash code</returns>
-         public int GetHashCode(CZeroOneSegment a)
+         public int GetHashCode(ZeroOneSegment a)
          {
             return a.Start.GetHashCode();
          }
@@ -453,7 +453,7 @@ namespace AreaDestination
          /// <param name="a">First segment</param>
          /// <param name="b">Second segment</param>
          /// <returns>Comparison on the start</returns>
-         public bool Equals(CZeroOneSegment a, CZeroOneSegment b)
+         public bool Equals(ZeroOneSegment a, ZeroOneSegment b)
          {
             return ((a.Start == b.Start) && (a.End == b.End));
          }
@@ -462,7 +462,7 @@ namespace AreaDestination
          /// Determines whether the segment starts with a given decimal.
          /// </summary>
          /// <param name="value">Decimal value</param>
-         public bool StartsWith(Decimal value)
+         public bool StartsWith(decimal value)
          {
             return (Start == value);
          }
@@ -470,8 +470,8 @@ namespace AreaDestination
          /// <summary>
          /// Determines whether the segment ends with a given decimal.
          /// </summary>
-         /// <param name="value">Decimal value</param>
-         public bool EndsWith(Decimal value)
+         /// <param name="value">decimal value</param>
+         public bool EndsWith(decimal value)
          {
             return (End == value);
          }
@@ -482,7 +482,7 @@ namespace AreaDestination
          /// <returns>1-dimensional segment representation as [a, b)</returns>
          public override string ToString()
          {
-            return this.ToString(DefaultFormat);
+            return ToString(DefaultFormat);
          }
 
          /// <summary>
@@ -503,8 +503,8 @@ namespace AreaDestination
       /// <typeparam name="T0">Type</typeparam>
       private class SortedSet<T0> : ICollection<T0>
       {
-         private readonly IDictionary<T0, LinkedListNode<T0>> m_Dictionary;
-         private readonly LinkedList<T0> m_LinkedList;
+         private IDictionary<T0, LinkedListNode<T0>> _dict { get; set; }
+         private LinkedList<T0> _linkList { get; set; }
 
          /// <summary>
          /// Creates a new generic ordered set with the default object comparer.
@@ -520,8 +520,8 @@ namespace AreaDestination
          /// <param name="comparer">Comparer</param>
          public SortedSet(IEqualityComparer<T0> comparer)
          {
-            m_Dictionary = new Dictionary<T0, LinkedListNode<T0>>(comparer);
-            m_LinkedList = new LinkedList<T0>();
+            _dict = new Dictionary<T0, LinkedListNode<T0>>(comparer);
+            _linkList = new LinkedList<T0>();
          }
 
          /// <summary>
@@ -529,13 +529,13 @@ namespace AreaDestination
          /// </summary>
          public int Count
          {
-            get { return m_Dictionary.Count; }
+            get { return _dict.Count; }
          }
 
          /// <summary>
          /// Gets whether the collection is readonly.
          /// </summary>
-         public virtual bool IsReadOnly { get { return m_Dictionary.IsReadOnly; } }
+         public virtual bool IsReadOnly { get { return _dict.IsReadOnly; } }
 
          /// <summary>
          /// Adds an object to the ordered set.
@@ -551,8 +551,8 @@ namespace AreaDestination
          /// </summary>
          public void Clear()
          {
-            m_LinkedList.Clear();
-            m_Dictionary.Clear();
+            _linkList.Clear();
+            _dict.Clear();
          }
 
          /// <summary>
@@ -562,10 +562,10 @@ namespace AreaDestination
          public bool Remove(T0 item)
          {
             LinkedListNode<T0> node;
-            bool bFound = m_Dictionary.TryGetValue(item, out node);
+            bool bFound = _dict.TryGetValue(item, out node);
             if (!bFound) return false;
-            m_Dictionary.Remove(item);
-            m_LinkedList.Remove(node);
+            _dict.Remove(item);
+            _linkList.Remove(node);
             return true;
          }
 
@@ -574,7 +574,7 @@ namespace AreaDestination
          /// </summary>
          public IEnumerator<T0> GetEnumerator()
          {
-            return m_LinkedList.GetEnumerator();
+            return _linkList.GetEnumerator();
          }
 
          /// <summary>
@@ -590,7 +590,7 @@ namespace AreaDestination
          /// </summary>
          public bool Contains(T0 item)
          {
-            return m_Dictionary.ContainsKey(item);
+            return _dict.ContainsKey(item);
          }
 
          /// <summary>
@@ -600,7 +600,7 @@ namespace AreaDestination
          /// <param name="iArrayIdx">Array index</param>
          public void CopyTo(T0[] array, int iArrayIdx)
          {
-            m_LinkedList.CopyTo(array, iArrayIdx);
+            _linkList.CopyTo(array, iArrayIdx);
          }
 
          /// <summary>
@@ -609,10 +609,10 @@ namespace AreaDestination
          /// <param name="item">Object to add</param>
          public bool Add(T0 item)
          {
-            if (m_Dictionary.ContainsKey(item)) 
+            if (_dict.ContainsKey(item))
                return false;
-            LinkedListNode<T0> node = m_LinkedList.AddLast(item);
-            m_Dictionary.Add(item, node);
+            LinkedListNode<T0> node = _linkList.AddLast(item);
+            _dict.Add(item, node);
             return true;
          }
       }

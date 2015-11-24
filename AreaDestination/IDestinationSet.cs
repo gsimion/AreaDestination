@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Data;
+
    /// <summary>
    /// Interface defining a generic destination set.
    /// </summary>
@@ -68,8 +68,8 @@ namespace AreaDestination
       /// Populates the destination set given a generic table containing destination ids and area code strings on a row level.
       /// </summary>
       /// <param name="rows">Row collection containing destination ids and area code strings on a row level</param>
-      /// <param name="destination">Destination ids column, type <paramref name="T">T</paramref> where empty values are not considered</param>
-      /// <param name="areas">Areas (string) column</param>
+      /// <param name="destination">Destination ids column</param>
+      /// <param name="area">Areas (string) column</param>
       /// <param name="performAggregationOnAreas">If <value>true</value> performs area aggregation before calling the implemented class method for populating the destination set</param>
       /// <remarks>Empty destination ids are skipped</remarks>
       void Populate(IEnumerable<DataRow> rows, DataColumn destination, DataColumn area, bool performAggregationOnAreas);

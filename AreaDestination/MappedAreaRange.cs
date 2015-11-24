@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+
    /// <summary>
    /// Object holding a range associated to a mapping.
    /// </summary>

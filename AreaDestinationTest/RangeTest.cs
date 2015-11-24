@@ -18,13 +18,13 @@ namespace AreaDestinationTest
       [TestMethod, Description("Asserts that implicit conversion from long to decimal works just fine")]
       public void ZeroOneArea_DecimalImplicitConversion()
       {
-         ulong l0 = 123456uL;
-         ulong l1 = 1234567890uL;
-         ulong l2 = ulong.MinValue;
-         ulong l3 = 2uL;
-         ulong l4 = 9999999999999999uL;
-         ulong l5 = 1844674407370955161uL;
-         ulong l6 = 1500uL;
+         UInt64 l0 = 123456uL;
+         UInt64 l1 = 1234567890uL;
+         UInt64 l2 = UInt64.MinValue;
+         UInt64 l3 = 2uL;
+         UInt64 l4 = 9999999999999999uL;
+         UInt64 l5 = 1844674407370955161uL;
+         UInt64 l6 = 1500uL;
 
          decimal dc0 = ZeroOneAreaRange.ConvertImplicitly(l0);
          decimal dc1 = ZeroOneAreaRange.ConvertImplicitly(l1);
@@ -62,22 +62,22 @@ namespace AreaDestinationTest
          decimal dc5 = 0.1844674407370955161m;
          decimal dc6 = Convert.ToDecimal("0.1500");
 
-         ulong l0 = ZeroOneAreaRange.ConvertImplicitly(dc0);
-         ulong l1 = ZeroOneAreaRange.ConvertImplicitly(dc1);
-         ulong l2 = ZeroOneAreaRange.ConvertImplicitly(dc2);
-         ulong l3 = ZeroOneAreaRange.ConvertImplicitly(dc3);
-         ulong l4 = ZeroOneAreaRange.ConvertImplicitly(dc4);
-         ulong l5 = ZeroOneAreaRange.ConvertImplicitly(dc5);
-         ulong l6 = ZeroOneAreaRange.ConvertImplicitly(dc6);
+         UInt64 l0 = ZeroOneAreaRange.ConvertImplicitly(dc0);
+         UInt64 l1 = ZeroOneAreaRange.ConvertImplicitly(dc1);
+         UInt64 l2 = ZeroOneAreaRange.ConvertImplicitly(dc2);
+         UInt64 l3 = ZeroOneAreaRange.ConvertImplicitly(dc3);
+         UInt64 l4 = ZeroOneAreaRange.ConvertImplicitly(dc4);
+         UInt64 l5 = ZeroOneAreaRange.ConvertImplicitly(dc5);
+         UInt64 l6 = ZeroOneAreaRange.ConvertImplicitly(dc6);
 
-         Assert.AreEqual<ulong>(123456uL, l0);
-         Assert.AreEqual<ulong>(123456789uL, l1);
-         Assert.AreEqual<ulong>(0uL, l2);
-         Assert.AreEqual<ulong>(0uL, l2);
-         Assert.AreEqual<ulong>(2uL, l3);
-         Assert.AreEqual<ulong>(9999999999999999uL, l4);
-         Assert.AreEqual<ulong>(1844674407370955161uL, l5);
-         Assert.AreEqual<ulong>(15uL, l6);
+         Assert.AreEqual<UInt64>(123456uL, l0);
+         Assert.AreEqual<UInt64>(123456789uL, l1);
+         Assert.AreEqual<UInt64>(0uL, l2);
+         Assert.AreEqual<UInt64>(0uL, l2);
+         Assert.AreEqual<UInt64>(2uL, l3);
+         Assert.AreEqual<UInt64>(9999999999999999uL, l4);
+         Assert.AreEqual<UInt64>(1844674407370955161uL, l5);
+         Assert.AreEqual<UInt64>(15uL, l6);
       }
 
       #endregion

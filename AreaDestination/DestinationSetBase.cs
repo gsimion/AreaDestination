@@ -1,22 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using System.Globalization;
-
-namespace AreaDestination
+﻿namespace AreaDestination
 {
+   using System;
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Text;
+   using System.Data;
+   using System.Globalization;
+
    /// <summary>
    /// Base class defining a destination set.
    /// </summary>
    /// <typeparam name="T0">Type of destination used</typeparam>
    /// <typeparam name="T1">Type of destination ID</typeparam>
-   public abstract class DestinationSetBase<T0, T1> : IDestinationSet<T0, T1> where T0 : IDestination<T1> where T1: IComparable
+   public abstract class DestinationSetBase<T0, T1> : IDestinationSet<T0, T1>
+      where T0 : IDestination<T1>
+      where T1 : IComparable
    {
-      protected const char Sep = Global.Sep; // separator
-      protected const char Del = Global.Del; // delimiter
-      
+      /// <summary>
+      /// Default area separator.
+      /// </summary>
+      protected const char Sep = Global.Sep;
+      /// <summary>
+      /// Default area range delimiter.
+      /// </summary>
+      protected const char Del = Global.Del;
+
       /// <summary>
       /// Adds a destination to the destination set.
       /// </summary>
@@ -27,7 +35,7 @@ namespace AreaDestination
       /// Populates the destination set given a generic dictionary of destination ids and area code strings.
       /// </summary>
       /// <param name="destinationsAndAreas">Generic dictionary of destination ids and area code strings</param>
-      public void Populate(IDictionary<T1, String> destinationsAndAreas)
+      public void Populate(IDictionary<T1, string> destinationsAndAreas)
       {
          foreach (T1 id in destinationsAndAreas.Keys)
          {
@@ -52,44 +60,44 @@ namespace AreaDestination
       /// Populates the destination set given a generic table containing destination ids and area code strings on a row level.
       /// </summary>
       /// <param name="rows">Row collection containing destination ids and area code strings on a row level</param>
-      /// <param name="destination">Destination ids column, type <paramref name="T">T</paramref> where empty values are not considered</param>
-      /// <param name="areas">Areas (string) column</param>
+      /// <param name="destination">Destination ids column</param>
+      /// <param name="area">Areas (string) column</param>
       /// <param name="performAggregationOnAreas">If <value>true</value> performs area aggregation before calling the implemented class method for populating the destination set</param>
       /// <remarks>Empty destination ids are skipped</remarks>
-      public void Populate(IEnumerable<DataRow> rows, DataColumn destination, DataColumn area, Boolean performAggregationOnAreas)
+      public void Populate(IEnumerable<DataRow> rows, DataColumn destination, DataColumn area, bool performAggregationOnAreas)
       {
-         IDictionary<T1, String> destinationAndAreas;
+         IDictionary<T1, string> destinationAndAreas;
          if (!performAggregationOnAreas)
          {
             destinationAndAreas = (from row in rows.AsEnumerable()
                                    where row.RowState != DataRowState.Deleted && !row.IsNull(destination) && !row.IsNull(area) && row[destination] != null
                                    group row by row.Field<T1>(destination))
-                                   .ToDictionary(x => x.Key, y => String.Join(Sep.ToString(), y.Select(z => z.Field<string>(area)).ToArray()));
+                                   .ToDictionary(x => x.Key, y => string.Join(Sep.ToString(), y.Select(z => z.Field<string>(area)).ToArray()));
          }
          else
          {
-            Dictionary<T1, List<String>> destinationAndCodes = new Dictionary<T1, List<String>>();
+            Dictionary<T1, List<string>> destinationAndCodes = new Dictionary<T1, List<string>>();
             foreach (DataRow row in rows)
             {
                if (row.IsNull(destination) || row.IsNull(area) || row[destination] == null)
                   continue;
-               List<String> codes = null;
+               List<string> codes = null;
                T1 dest = row.Field<T1>(destination);
                if (!destinationAndCodes.TryGetValue(dest, out codes))
                {
-                  codes = new List<String>();
+                  codes = new List<string>();
                   destinationAndCodes.Add(dest, codes);
                }
                destinationAndCodes[dest].Add(row.Field<string>(area));
             }
-            destinationAndAreas = new Dictionary<T1, String>();
-            foreach (KeyValuePair<T1, List<String>> entry in destinationAndCodes)
-               destinationAndAreas.Add(entry.Key, AreaTransformer.TransformAreaDigitsToString(entry.Value, Sep, Del));
+            destinationAndAreas = new Dictionary<T1, string>();
+            foreach (KeyValuePair<T1, List<string>> entry in destinationAndCodes)
+               destinationAndAreas.Add(entry.Key, AreaTransformer.TransformAreaDigitsToString(entry.Value, Sep, Del, Compression.Preserve));
          }
 
          Populate(destinationAndAreas);
       }
-  
+
       /// <summary>
       /// Adds an area to a destination, or create a new destination if it does not exists
       /// </summary>
@@ -113,13 +121,15 @@ namespace AreaDestination
       /// <summary>
       /// Gets a matrix representing the areas passed as single area (array with single element) or range (array with two elements).
       /// </summary>
-      /// <param name="sAreas">Full area representation, where area code separator is ',' and range delimiter is '-'</param>
+      /// <param name="areas">Full area representation</param>
+      /// <param name="sep">Area code separator</param>
+      /// <param name="del">Area code range delimiter</param>
       /// <returns>Area matrix</returns>
-      public ulong[][] GetAreasAndRanges(string sAreas, char sep, char del)
+      public ulong[][] GetAreasAndRanges(string areas, char sep, char del)
       {
-         if (sAreas == null)
+         if (areas == null)
             return new ulong[][] { };
-         ulong[][] areaRangeArray = (from String range in sAreas.Split(new char[] { sep }, StringSplitOptions.RemoveEmptyEntries)
+         ulong[][] areaRangeArray = (from string range in areas.Split(new char[] { sep }, StringSplitOptions.RemoveEmptyEntries)
                                       select (from area in range.Split(new char[] { del }, StringSplitOptions.RemoveEmptyEntries)
                                               select Convert.ToUInt64(area, CultureInfo.InvariantCulture.NumberFormat)).ToArray())
             .ToArray();

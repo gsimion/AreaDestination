@@ -98,7 +98,7 @@ namespace AreaDestinationTest
       /// <summary>
       /// Asserts that destination set can be populated correctly via dictionary.
       /// </summary>
-      [TestMethod(), Description("Asserts that destination set can be populated correctly via dictionary")]
+      [TestMethod, Description("Asserts that destination set can be populated correctly via dictionary")]
       public void Destination_PopulateByDictionary()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -115,7 +115,7 @@ namespace AreaDestinationTest
       /// <summary>
       /// Asserts that destination set can be populated correctly via datatable.
       /// </summary>
-      [TestMethod(), Description("Asserts that destination set can be populated correctly via datatable")]
+      [TestMethod, Description("Asserts that destination set can be populated correctly via datatable")]
       public void Destination_PopulateByDatatable()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -167,7 +167,7 @@ namespace AreaDestinationTest
 
       #endregion
 
-      [TestMethod(), Description("Asserts that single areas can be added to a destination belonging to a destination set")]
+      [TestMethod, Description("Asserts that single areas can be added to a destination belonging to a destination set")]
       public void Destination_SingleArea()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -175,7 +175,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("33", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that multiple areas can be added to a destination belonging to a destination set")]
+      [TestMethod, Description("Asserts that multiple areas can be added to a destination belonging to a destination set")]
       public void Destination_SingleAreaWithMultipleCode()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -184,7 +184,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("33-34", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that areas can be modified for a destination belonging to a destination set")]
+      [TestMethod, Description("Asserts that areas can be modified for a destination belonging to a destination set")]
       public void Destination_ModArea()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -194,7 +194,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("330,332", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that overlapping areas are kept for a destination belonging to a destination set")]
+      [TestMethod, Description("Asserts that overlapping areas are kept for a destination belonging to a destination set")]
       public void Destination_OverlapAreaOpt()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -202,7 +202,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("33,332", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that single area can be removed from a destination belonging to a destination set")]
+      [TestMethod, Description("Asserts that single area can be removed from a destination belonging to a destination set")]
       public void Destination_RemoveArea()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -212,7 +212,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("330,332,338", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that adding an already existing area to a destination throws an argument exception")]
+      [TestMethod, Description("Asserts that adding an already existing area to a destination throws an argument exception")]
       [ExpectedException(typeof(InvalidOperationException))]
       public void Destination_AddAlreadyExistingArea()
       {
@@ -223,7 +223,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("330-332,338", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that updating a different destination with an already existing area to a destination throws an argument exception")]
+      [TestMethod, Description("Asserts that updating a different destination with an already existing area to a destination throws an argument exception")]
       [ExpectedException(typeof(InvalidOperationException))]
       public void Destination_CreateDestinationWithExistingAreaInOtherDest()
       {
@@ -232,7 +232,7 @@ namespace AreaDestinationTest
          ds.UpdateDestination("b", "330");
       }
 
-      [TestMethod(), Description("Asserts that it is possible to update a destination moving around the same areas")]
+      [TestMethod, Description("Asserts that it is possible to update a destination moving around the same areas")]
       public void Destination_UpdateDestination()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -242,7 +242,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("1,330,332", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that it is possible to update a destination moving around a covered area code which is not the same")]
+      [TestMethod, Description("Asserts that it is possible to update a destination moving around a covered area code which is not the same")]
       public void Destination_UpdateDestinationContainingCoveredAreaCode()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -252,7 +252,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("3340,3342-3349", ds.ExplicitDestinations["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that it is possible to update a destination moving around a covered area code which is not the same")]
+      [TestMethod, Description("Asserts that it is possible to update a destination moving around a covered area code which is not the same")]
       public void Destination_UpdateDestinationContainingCoveredAreaCodeRemoveCode()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -263,7 +263,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("334", ds.ExplicitDestinations["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that it is possible add area after updating a destination that is already defined for another destinaiton")]
+      [TestMethod, Description("Asserts that it is possible add area after updating a destination that is already defined for another destinaiton")]
       [ExpectedException(typeof(InvalidOperationException))]
       public void Destination_AddAreaExistingAreaInOtherDest()
       {
@@ -273,7 +273,7 @@ namespace AreaDestinationTest
          ds.AddArea("b", 331);
       }
 
-      [TestMethod(), Description("Asserts that it is not possible to remove a not existing explicit area, even if there are area overlapping with that")]
+      [TestMethod, Description("Asserts that it is not possible to remove a not existing explicit area, even if there are area overlapping with that")]
       [ExpectedException(typeof(InvalidOperationException))]
       public void Destination_RemoveNotExistingArea()
       {
@@ -283,7 +283,7 @@ namespace AreaDestinationTest
          ds.RemoveArea(3312);
       }
 
-      [TestMethod(), Description("Asserts that an empty system destination set contains the right undefined destination properties")]
+      [TestMethod, Description("Asserts that an empty system destination set contains the right undefined destination properties")]
       public void DestinationSet_Empty()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -298,7 +298,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("0-9", ds.Destinations[ds.UndefinedDestinationId].ToString());
       }
 
-      [TestMethod(), Description("Asserts that already covered range is not overridden if area is explicitely added")]
+      [TestMethod, Description("Asserts that already covered range is not overridden if area is explicitely added")]
       public void DestinationSet_Dest_CoveredRange()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -310,7 +310,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("33,331", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that continuous range is merged correctly if area is explicitely added")]
+      [TestMethod, Description("Asserts that continuous range is merged correctly if area is explicitely added")]
       public void DestinationSet_Dest_ContiguousRange()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -321,7 +321,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("330-331", ds.Destinations["a"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that same areas cannot be added to another destination if already explicitely defined")]
+      [TestMethod, Description("Asserts that same areas cannot be added to another destination if already explicitely defined")]
       [ExpectedException(typeof(InvalidOperationException))]
       public void DestinationSet_Dest_SplitRange()
       {
@@ -331,7 +331,7 @@ namespace AreaDestinationTest
          ds.AddArea("b", 332);
       }
 
-      [TestMethod(), Description("Asserts that more than one disjoint destination can be stored correctly in the destination set")]
+      [TestMethod, Description("Asserts that more than one disjoint destination can be stored correctly in the destination set")]
       public void DestinationSet_Dest_2_Dest_Disjoint()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -344,7 +344,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("332", ds.Destinations["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that more than one overlapping destination can be stored correctly in the destination set")]
+      [TestMethod, Description("Asserts that more than one overlapping destination can be stored correctly in the destination set")]
       public void DestinationSet_Dest_2_Dest_Overlap()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -355,7 +355,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("332", ds.Destinations["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that more destination can be modified correctly when moving an area code belonging to a range")]
+      [TestMethod, Description("Asserts that more destination can be modified correctly when moving an area code belonging to a range")]
       public void DestinationSet_Dest_2_Mod_Dest()
       {
          DestinationSet<string> ds = new DestinationSet<string>();
@@ -370,7 +370,7 @@ namespace AreaDestinationTest
          Assert.AreEqual("332-333", ds.Destinations["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that exception is thrown if update destination is called without single area codes")]
+      [TestMethod, Description("Asserts that exception is thrown if update destination is called without single area codes")]
       [ExpectedException(typeof(FormatException))]
       public void DestinationSet_Dest_CorrectHandlingAreaCodes()
       {
@@ -381,7 +381,7 @@ namespace AreaDestinationTest
 
       #region "Mapping"
 
-      [TestMethod(), Description("Asserts that mapping is preserving the right destination identity")]
+      [TestMethod, Description("Asserts that mapping is preserving the right destination identity")]
       public void DestinationSet_Dest_Map_Identity()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -390,7 +390,7 @@ namespace AreaDestinationTest
          ds1.AddArea("b", 332);
          ds2.AddArea("a", 33);
          ds2.AddArea("b", 332);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual(3, maps.Count);
          Assert.AreEqual("00-32,34-99", maps.GetMappedAreas(ds1.UndefinedDestinationId, ds2.UndefinedDestinationId));
@@ -398,7 +398,7 @@ namespace AreaDestinationTest
          Assert.AreEqual("332", maps.GetMappedAreas("b", "b"));
       }
 
-      [TestMethod(), Description("Asserts that mapping is capable of mapping correctly overlapping destinations")]
+      [TestMethod, Description("Asserts that mapping is capable of mapping correctly overlapping destinations")]
       public void DestinationSet_Dest_Map_Overlap()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -407,7 +407,7 @@ namespace AreaDestinationTest
          ds1.AddArea("b", 332);
          ds2.AddArea("a", 33);
          ds2.AddArea("b", 334);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual(4, maps.Count);
          Assert.AreEqual("00-32,34-99", maps.GetMappedAreas(ds1.UndefinedDestinationId, ds2.UndefinedDestinationId));
@@ -424,7 +424,7 @@ namespace AreaDestinationTest
          Assert.AreEqual("334", maps.GainedAreaCodes["b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that mapping is capable of mapping correctly overlapping destinations")]
+      [TestMethod, Description("Asserts that mapping is capable of mapping correctly overlapping destinations")]
       public void DestinationSet_Diff_Dest_Map_Overlap()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -433,7 +433,7 @@ namespace AreaDestinationTest
          ds1.AddArea("ds1b", 332);
          ds2.AddArea("ds2a", 33);
          ds2.AddArea("ds2b", 334);
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual(4, maps.Count);
          Assert.AreEqual("330-331,333,335-339", maps.GetMappedAreas("ds1a", "ds2a"));
@@ -449,7 +449,7 @@ namespace AreaDestinationTest
          Assert.AreEqual("334", maps.GainedAreaCodes["ds2b"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that mapping is capable of mapping correctly a single destination swap")]
+      [TestMethod, Description("Asserts that mapping is capable of mapping correctly a single destination swap")]
       public void DestinationSet_Mapping_ChildDestinationSwap()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -466,7 +466,7 @@ namespace AreaDestinationTest
          ds2.AddArea("AFGHANISTAN-MOBILE ETISALAT", 9378);
          //do not include AFGHANISTAN-MOBILE ROSHAN
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
 
          Assert.AreEqual<int>(6, maps.Count);
          Assert.AreEqual<int>(2, maps.LostAreaCodes.Count);
@@ -477,7 +477,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("9379", maps.GainedAreaCodes["AFGHANISTAN-MOBILE OTHERS"].ToString());
       }
 
-      [TestMethod(), Description("Asserts that mapping is fully mapping correctly the same destination set, specified with different order per destination")]
+      [TestMethod, Description("Asserts that mapping is fully mapping correctly the same destination set, specified with different order per destination")]
       public void DestinationSet_Mapping_SameDestSetWithoutChanges()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -516,7 +516,7 @@ namespace AreaDestinationTest
          ds2.AddArea("ALGERIA-MOBILE WATANIYA", 2135);
          ds2.AddArea("AMERICAN SAMOA", 1684);
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(16, maps.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<int>(0, maps.LostAreaCodes.Count, "Lost areas");
          Assert.AreEqual<int>(0, maps.GainedAreaCodes.Count, "Gained areas");
@@ -530,7 +530,7 @@ namespace AreaDestinationTest
          }
       }
 
-      [TestMethod(), Description("Asserts that mapping is mapping correctly a single scenario with one destination and its sub destinations")]
+      [TestMethod, Description("Asserts that mapping is mapping correctly a single scenario with one destination and its sub destinations")]
       public void DestinationSet_Mapping_SameRoutingDestination_Chile()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -548,7 +548,7 @@ namespace AreaDestinationTest
          ds2.UpdateDestination("CHILE-SANTIAGO", "562");
          ds2.UpdateDestination("CHILE-SPECIAL SERVICES", "5615,5611,56322100,5632255,5645197");
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(6, maps.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<int>(0, maps.LostAreaCodes.Count, "Lost areas");
          Assert.AreEqual<int>(0, maps.GainedAreaCodes.Count, "Gained areas");
@@ -559,7 +559,7 @@ namespace AreaDestinationTest
          Assert.IsTrue(maps["CHILE-SPECIAL SERVICES"].IsFullyMapped);
       }
 
-      [TestMethod(), Description("Asserts that mapping is mapping correctly a single scenario containing least significant zeros")]
+      [TestMethod, Description("Asserts that mapping is mapping correctly a single scenario containing least significant zeros")]
       public void DestinationSet_Mapping_SameRoutingDestination_LeastSignificantZerosOrder()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -571,14 +571,14 @@ namespace AreaDestinationTest
          ds2.UpdateDestination("GERMANY-E-PLUS", "49150");
          ds2.UpdateDestination("GERMANY-SERVICES", "4915");
 
-         DestinationSetBase.CMappingResult<string> maps1to2 = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps1to2 = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(3, maps1to2.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<int>(0, maps1to2.LostAreaCodes.Count, "Lost areas");
          Assert.AreEqual<int>(0, maps1to2.GainedAreaCodes.Count, "Gained areas");
          Assert.IsTrue(maps1to2["GERMANY-E-PLUS"].IsFullyMapped);
          Assert.IsTrue(maps1to2["GERMANY-SERVICES"].IsFullyMapped);
 
-         DestinationSetBase.CMappingResult<string> maps2to1 = ds2.MapToDestinationSet(ds1);
+         DestinationSetBase.MappingResult<string> maps2to1 = ds2.MapToDestinationSet(ds1);
          Assert.AreEqual<int>(3, maps2to1.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<int>(0, maps2to1.LostAreaCodes.Count, "Lost areas");
          Assert.AreEqual<int>(0, maps2to1.GainedAreaCodes.Count, "Gained areas");
@@ -586,7 +586,7 @@ namespace AreaDestinationTest
          Assert.IsTrue(maps2to1["GERMANY-SERVICES"].IsFullyMapped);
       }
 
-      [TestMethod(), Description("Asserts that the correct parent for the mapping is fetched by the mapper")]
+      [TestMethod, Description("Asserts that the correct parent for the mapping is fetched by the mapper")]
       public void DestinationSet_Mapping_RSI_SwedenMobileExample()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -599,7 +599,7 @@ namespace AreaDestinationTest
          ds2.UpdateDestination("SWEDEN-MOBILE 1", "4670-4675");
          ds2.UpdateDestination("SWEDEN-MOBILE 2", "4676-4678");
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          Assert.AreEqual<int>(3, maps.GetMappedDestination("SWEDEN-MOBILE").Count());
          Assert.AreEqual<int>(1, maps.GetMappedDestination("SWEDEN").Count());
          Assert.IsTrue(maps["SWEDEN"].IsFullyMapped);
@@ -609,7 +609,7 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("4679", maps.Maps[new KeyValuePair<string, string>("SWEDEN-MOBILE", "SWEDEN")].ToString());
       }
 
-      [TestMethod(), Description("Asserts that mapping is capable of mapping correctly a single destination swap, in the typical RSI scenario for CI")]
+      [TestMethod, Description("Asserts that mapping is capable of mapping correctly a single destination swap, in the typical RSI scenario for CI")]
       public void DestinationSet_Mapping_RSI_ChildDestinationMovedToMain()
       {
          DestinationSet<string> ds1 = new DestinationSet<string>();
@@ -627,7 +627,7 @@ namespace AreaDestinationTest
          ds2.AddArea("AFGHANISTAN-FIX", 93);
          ds2.AddArea("ALBANIA", 355);
 
-         DestinationSetBase.CMappingResult<string> maps = ds1.MapToDestinationSet(ds2);
+         DestinationSetBase.MappingResult<string> maps = ds1.MapToDestinationSet(ds2);
          //maps
          Assert.AreEqual<int>(9, maps.Maps.Count, "Fully mapped destinations");
          Assert.AreEqual<string>("930-936,938-939", maps.Maps[new KeyValuePair<string, string>("AFGHANISTAN-FIX", "AFGHANISTAN-FIX")].ToString());
@@ -654,7 +654,7 @@ namespace AreaDestinationTest
 
       #endregion
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindArea()
       {
          Assert.AreEqual<string>("Denmark - Paid800", m_DestSetCarrier.FindArea(458021));
@@ -663,25 +663,25 @@ namespace AreaDestinationTest
          Assert.AreEqual<string>("Denmark - Mobile Others", m_DestSetCarrier.FindDestinations("452").First());
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindAreaFullyCovered()
       {
          Assert.AreEqual<string>("DENMARK MOBILE TDC", m_DestSetRouting.FindArea("45200"));
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindDestinationFullyCovered()
       {
          Assert.AreEqual<string>("DENMARK MOBILE TDC", m_DestSetRouting.FindFirstMatchingDestination(452));
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindExactAreaFullyCoveredByOtherDests()
       {
          Assert.IsNull(m_DestSetRouting.FindArea("452"));
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindExactAreaFullyCoveredEachCode()
       {
          Assert.AreEqual<string>("DENMARK FIXED-TDC", m_DestSetRouting.FindArea("457010"));
@@ -697,13 +697,13 @@ namespace AreaDestinationTest
 
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindExactAreaExactCovered()
       {
          Assert.AreEqual<string>("DENMARK FIXED-TDC", m_DestSetRouting.FindArea("45701"));
       }
 
-      [TestMethod(), Description("Asserts find area/destination works correctly within a destination set")]
+      [TestMethod, Description("Asserts find area/destination works correctly within a destination set")]
       public void DestinationSet_FindExactAreaMoreSpecific()
       {
          Assert.AreEqual<string>("DENMARK FIXED-PUBLIC PAY", m_DestSetRouting.FindArea("459091"));
