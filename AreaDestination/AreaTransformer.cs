@@ -114,10 +114,78 @@
          if (areas == null)
             return new ulong[][] { };
          ulong[][] areaRangeArray = (from string sRange in areas.Split(new char[] { sep }, StringSplitOptions.RemoveEmptyEntries)
-                                      select (from area in sRange.Split(new char[] { del }, StringSplitOptions.RemoveEmptyEntries)
-                                              select Convert.ToUInt64(area, CultureInfo.InvariantCulture.NumberFormat)).ToArray())
+                                     select (from area in sRange.Split(new char[] { del }, StringSplitOptions.RemoveEmptyEntries)
+                                             select Convert.ToUInt64(area, CultureInfo.InvariantCulture.NumberFormat)).ToArray())
             .ToArray();
          return areaRangeArray;
+      }
+
+      /// <summary>
+      /// Gets a string representing the merge areas contained by the arguments. 
+      /// Resulting string will eat child areas and overlaps.
+      /// </summary>
+      /// <param name="sep">Area separator I/O</param>
+      /// <param name="del">Area range delimiter I/O</param>
+      /// <param name="codesCollection">Strings containing the areas to merge, represented according to the parameters passed</param>
+      /// <param name="compression">Compression method</param>
+      /// <returns>String representing the merge areas</returns>
+      public static string MergeAreas(IEnumerable<string> codesCollection, char sep, char del, Compression compression)
+      {
+         ParsingMode parsing = (compression == Compression.Full) ? ParsingMode.EatChildReturnSingleDigits : ParsingMode.PreserveChildReturnSingleDigits;
+         string init = String.Empty;
+         if (codesCollection == null || !codesCollection.Any())
+            return init;
+
+         HashSet<ulong> codes = new HashSet<ulong>();
+         foreach (string s in codesCollection)
+            foreach (ulong l in GetAreasFromString<ulong>(s, sep, del, parsing))
+               codes.Add(l);
+         if (compression == Compression.Full)
+         {
+            ExplicitDestination<Int32> dest = new ExplicitDestination<Int32>(Int32.MaxValue);
+            foreach (ulong c in codes)
+               dest.AddArea(c);
+            return dest.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+         }
+         else
+         {
+            Destination<Int32> dest = new Destination<Int32>(Int32.MaxValue);
+            foreach (ulong c in codes)
+               dest.AddArea(c);
+            return dest.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+         }
+      }
+
+      /// <summary>
+      /// Gets a string having a full representation of the passed area codes. Compresses child digits already belonging to another one.
+      /// </summary>
+      /// <param name="digits">List of digits to get the string representation from</param>
+      /// <param name="sep">Area separator used for the output</param>
+      /// <param name="del">Area range delimiter used for the output</param>
+      /// <param name="compression">Compression method to use</param>
+      /// <returns>Full representation as string.</returns>
+      public static string TransformAreaDigitsToString(List<ulong> digits, char sep, char del, Compression compression)
+      {
+         if (digits == null || digits.Count == 0)
+            return String.Empty;
+         if (compression == Compression.Full)
+         {
+            ExplicitDestination<int> destination = new ExplicitDestination<int>(Int32.MaxValue);
+            foreach (ulong fullCode in digits)
+            {
+               destination.AddArea(fullCode);
+            }
+            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+         }
+         else
+         {
+            Destination<int> destination = new Destination<int>(Int32.MaxValue);
+            foreach (ulong l in digits)
+            {
+               destination.AddArea(l);
+            }
+            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+         }
       }
 
       /// <summary>
@@ -134,29 +202,31 @@
          if (digits == null || digits.Count == 0)
             return string.Empty;
 
-         if (compression == Compression.Full)
+         if (trimZeros)
          {
-            ExplicitDestination<int> destination = new ExplicitDestination<int>(int.MinValue);
-            foreach (string digit in digits)
-            {
-               if (trimZeros)
-                  destination.Add(new Area<int>(destination.Id, Convert.ToUInt64(digit, CultureInfo.InvariantCulture.NumberFormat)));
-               else
-                  destination.Add(new Area<int>(destination.Id, digit));
-            }
-            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+            List<ulong> d = digits.Select(x => Convert.ToUInt64(x)).ToList();
+            return TransformAreaDigitsToString(d, sep, del, compression);
          }
          else
          {
-            Destination<int> destination = new Destination<int>(int.MinValue);
-            foreach (string digit in digits)
+            if (compression == Compression.Full)
             {
-               if (trimZeros)
-                  destination.AddArea(Convert.ToUInt64(digit, CultureInfo.InvariantCulture.NumberFormat));
-               else
-                  destination.AddArea(new Area<int>(destination.Id, digit));
+               ExplicitDestination<int> destination = new ExplicitDestination<int>(Int32.MaxValue);
+               foreach (string digit in digits)
+               {
+                  destination.Add(new Area<int>(destination.Id, digit));
+               }
+               return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
             }
-            return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+            else
+            {
+               Destination<int> destination = new Destination<int>(Int32.MaxValue);
+               foreach (string digit in digits)
+               {
+                  destination.AddArea(new Area<int>(destination.Id, digit));
+               }
+               return destination.ToString().Replace(new string(Global.Sep, 1), new string(new char[] { sep, Global.Space })).Replace(Global.Del, del);
+            }
          }
       }
 
@@ -200,7 +270,7 @@
          if (!rows.First().Table.Columns.Contains(column))
             return string.Empty;
 
-         return TransformAreaDigitsToString(rows, rows.First().Table.Columns[column], sep, del,compression, trimZeros);
+         return TransformAreaDigitsToString(rows, rows.First().Table.Columns[column], sep, del, compression, trimZeros);
       }
    }
 }

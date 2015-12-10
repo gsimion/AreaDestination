@@ -169,14 +169,14 @@
       /// <returns>Least important unit</returns>
       public static decimal GetUnit(decimal value)
       {
-         int iPrecision = BitConverter.GetBytes(decimal.GetBits(value)[3])[2];
-         Decimal dcUnit = decimal.One;
-         while (iPrecision > 0)
+         int precision = BitConverter.GetBytes(decimal.GetBits(value)[3])[2];
+         Decimal unit = decimal.One;
+         while (precision > 0)
          {
-            dcUnit /= 10;
-            iPrecision--;
+            unit /= 10;
+            precision--;
          }
-         return dcUnit;
+         return unit;
       }
 
       /// <summary>
@@ -218,8 +218,8 @@
       {
          if (value.Equals(0))
             return 0;
-         ulong longNo = Convert.ToUInt64(value.ToString().Substring(2).TrimEnd(Global.Zero), CultureInfo.InvariantCulture.NumberFormat);
-         return longNo;
+         ulong number = Convert.ToUInt64(value.ToString().Substring(2).TrimEnd(Global.Zero), CultureInfo.InvariantCulture.NumberFormat);
+         return number;
       }
    }
 }

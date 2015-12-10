@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AreaLineTest.cs" />
     <Compile Include="AreaTransformerTest.cs" />
+    <Compile Include="AreaRectangleTest.cs" />
     <Compile Include="DestinationSetTest.cs" />
     <Compile Include="ExplicitDestinationSetTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

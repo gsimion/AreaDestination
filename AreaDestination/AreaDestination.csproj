@@ -78,11 +78,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Area.cs" />
+    <Compile Include="Paint\AreaRectangle.cs" />
     <Compile Include="DateRange.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IZeroOneAreaRange.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="IRange.cs" />
+    <Compile Include="Paint\Painter.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="AreaTransformer.cs" />
     <Compile Include="AreaLine.cs" />

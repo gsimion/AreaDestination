@@ -11,7 +11,7 @@ namespace AreaDestinationTest
    public class AreaTransformerTest
    {
 
-      #region "StringToDigit"
+      #region "string to digits"
 
       /// <summary>
       /// Ensures that AreaCodeTransformer converts String to Digits correctly,when country code is set to 0 only , and with default delimiters
@@ -345,7 +345,7 @@ ParsingMode ParsingMode)
       }
       #endregion
 
-      #region "StringToDigits Without Compact"
+      #region "string to digits - compression"
       /// <summary>
       /// Ensures that AreaCodeTransformer converts String to Digits correctly, with provided delimiters
       /// </summary>
@@ -436,7 +436,80 @@ ParsingMode ParsingMode)
 
       #endregion
 
-      #region "DigitToString - List"
+      #region "Digit to string - list"
+
+      /// <summary>
+      /// Asserts that area transformer returns correct representation for numeric digits and full compression
+      /// </summary>
+      [TestMethod, Description("Asserts that area transformer returns correct representation for numeric digits and full compression")]
+      public void AreaTransformer_UInt64DigitsToString_FullCompression()
+      {
+         List<ulong> AreaList = new List<ulong>();
+         AreaList.Add(2);
+         AreaList.Add(3);
+         AreaList.Add(34);
+         AreaList.Add(35);
+         AreaList.Add(5);
+
+         string AreaString = AreaTransformer.TransformAreaDigitsToString(AreaList, ',', '-', Compression.Full);
+
+         Assert.AreEqual<string>("2-3, 5", AreaString);
+      }
+
+      /// <summary>
+      /// Asserts that area transformer returns correct representation for numeric digits and preserve compression.
+      /// </summary>
+      [TestMethod, Description("Asserts that area transformer returns correct representation for numeric digits and preserve compression")]
+      public void AreaTransformer_UInt64DigitsToString_PreserveCompression()
+      {
+         List<ulong> AreaList = new List<ulong>();
+         AreaList.Add(2);
+         AreaList.Add(3);
+         AreaList.Add(34);
+         AreaList.Add(35);
+         AreaList.Add(5);
+
+         string AreaString = AreaTransformer.TransformAreaDigitsToString(AreaList, ',', '-', Compression.Preserve);
+
+         Assert.AreEqual<string>("2-3, 34-35, 5", AreaString);
+      }
+
+      /// <summary>
+      /// Asserts that area transformer returns correct representation for string digits with full compression and leading zeros.
+      /// </summary>
+      [TestMethod, Description("Asserts that area transformer returns correct representation for string digits with full compression and leading zeros")]
+      public void AreaTransformer_StringDigitsToString_FullCompression_LeadingZeros()
+      {
+         List<string> AreaList = new List<string>();
+         AreaList.Add("02");
+         AreaList.Add("03");
+         AreaList.Add("034");
+         AreaList.Add("035");
+         AreaList.Add("05");
+
+         string AreaString = AreaTransformer.TransformAreaDigitsToString(AreaList, ',', '-', Compression.Full, false);
+
+         Assert.AreEqual<string>("02-03, 05", AreaString);
+      }
+
+      /// <summary>
+      /// Asserts that area transformer returns correct representation for string digits with preserve compression and leading zeros.
+      /// </summary>
+      [TestMethod, Description("Asserts that area transformer returns correct representation for string digits with preserve compression and leading zeros")]
+      public void AreaTransformer_StringDigitsToString_PreserveCompression_LeadingZeros()
+      {
+         List<string> AreaList = new List<string>();
+         AreaList.Add("02");
+         AreaList.Add("03");
+         AreaList.Add("034");
+         AreaList.Add("035");
+         AreaList.Add("05");
+
+         string AreaString = AreaTransformer.TransformAreaDigitsToString(AreaList, ',', '-', Compression.Preserve, false);
+
+         Assert.AreEqual<string>("02-03, 034-035, 05", AreaString);
+      }
+
       /// <summary>
       /// Ensures that AreaCodeTransformer converts Digits to String correctly, with provided delimiters
       /// </summary>
@@ -578,7 +651,7 @@ ParsingMode ParsingMode)
 
       #endregion
 
-      #region "DigitToString - Rows"
+      #region "Digit to string - rows"
       /// <summary>
       /// Ensures that AreaCodeTransformer converts Digits to String correctly, with provided delimiters
       /// </summary>
@@ -693,6 +766,70 @@ ParsingMode ParsingMode)
          sAreaString = AreaTransformer.TransformAreaDigitsToString(Areas.Select(), "COLUMN_NOT_PART_OF_ROWS", ';', '-', Compression.Full);
          Assert.AreEqual<string>("", sAreaString);
       }
+      #endregion
+
+      #region Merge areas
+
+      /// <summary>
+      /// Asserts that merge area can merge a simple scenario correctly with full compression.
+      /// </summary>
+      [TestMethod, Description("Asserts that merge area can merge a simple scenario correctly with full compression")]
+      public void AreaTransformer_MergeAreas_SimpleCase_FullCompression()
+      {
+         List<string> genericAreas = new List<string>();
+         genericAreas.Add("1, 2, 3");
+         genericAreas.Add("4, 5, 6");
+         genericAreas.Add("56, 45, 456, 46");
+
+         string actual = AreaTransformer.MergeAreas(genericAreas, ',', '-', Compression.Full);
+         Assert.AreEqual<string>("1-6", actual);
+      }
+
+      /// <summary>
+      /// Asserts that merge area can merge a simple scenario correctly with preserve compression.
+      /// </summary>
+      [TestMethod, Description("Asserts that merge area can merge a simple scenario correctly with preserve compression")]
+      public void AreaTransformer_MergeAreas_SimpleCase_PreserveCompression()
+      {
+         List<string> genericAreas = new List<string>();
+         genericAreas.Add("1, 2, 3");
+         genericAreas.Add("4, 5, 6");
+         genericAreas.Add("56, 45, 456, 46");
+
+         string actual = AreaTransformer.MergeAreas(genericAreas, ',', '-', Compression.Preserve);
+         Assert.AreEqual<string>("1-4, 45, 456, 46, 5, 56, 6", actual);
+      }
+
+      /// <summary>
+      /// Asserts that merge area can merge a less simple scenario correctly with full compression.
+      /// </summary>
+      [TestMethod, Description("Asserts that merge area can merge a less simple scenario correctly with full compression")]
+      public void AreaTransformer_MergeAreas_LessSimpleCase_FullCompression()
+      {
+         List<string> genericAreas = new List<string>();
+         genericAreas.Add("1, 2, 3, 5678");
+         genericAreas.Add("3, 4, 5, 6, 1, 123, 126-128");
+         genericAreas.Add("56, 45, 456, 46, 5678");
+
+         string actual = AreaTransformer.MergeAreas(genericAreas, ',', '-', Compression.Full);
+         Assert.AreEqual<string>("1-6", actual);
+      }
+
+      /// <summary>
+      /// Asserts that merge area can merge a less simple scenario correctly with preserve compression.
+      /// </summary>
+      [TestMethod, Description("Asserts that merge area can merge a less simple scenario correctly with preserve compression")]
+      public void AreaTransformer_MergeAreas_LessSimpleCase_PreserveCompression()
+      {
+         List<string> genericAreas = new List<string>();
+         genericAreas.Add("1, 2, 3, 5678");
+         genericAreas.Add("3, 4, 5, 6, 1, 123, 126-128");
+         genericAreas.Add("56, 45, 456, 46, 5678");
+
+         string actual = AreaTransformer.MergeAreas(genericAreas, ',', '-', Compression.Preserve);
+         Assert.AreEqual<string>("1, 123, 126-128, 2-4, 45, 456, 46, 5, 56, 5678, 6", actual);
+      }
+
       #endregion
    }
 }

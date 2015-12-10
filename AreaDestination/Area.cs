@@ -3,7 +3,7 @@
    using System;
    using System.Globalization;
    using System.Collections.Generic;
- 
+
    /// <summary>
    /// Class defining an area.
    /// The class supports generic digits, also starting with '0'.
@@ -143,6 +143,5 @@
             return defaultComparison;
          return decimal.Compare(ZeroOneDecimalRange.GetUnit(y), ZeroOneDecimalRange.GetUnit(x));
       }
-
    }
 }
