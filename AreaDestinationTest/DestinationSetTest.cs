@@ -708,5 +708,60 @@ namespace AreaDestinationTest
       {
          Assert.AreEqual<string>("DENMARK FIXED-PUBLIC PAY", m_DestSetRouting.FindArea("459091"));
       }
+
+      #region Standardize
+
+      [TestMethod, Description("Asserts destination set performs standardization truncating correctly area codes ending with digit higher than four to perform the long string matching")]
+      public void DestinationSet_Standardize_WithCorrectLongStringMatchingForLastDigitHigherThanFour()
+      {
+         DestinationSet<string> ds = new DestinationSet<string>();
+         ds.AddArea("ITALY", 39);
+         ds.UpdateDestination("ITALY-MOBILE 1", "3943912, 3943915, 39439129");
+         ds.UpdateDestination("ITALY-MOBILE 2", "3943913, 3943916, 39439168, 39439159");
+
+         ds.Standardize();
+
+         Assert.AreEqual<string>("39", ds["ITALY"].ToString(), "Italy destination area codes");
+         Assert.AreEqual<string>("3943912,3943915", ds["ITALY-MOBILE 1"].ToString(), "Italy-mobile 1 destination area codes");
+         Assert.AreEqual<string>("3943913,39439159-39439169", ds["ITALY-MOBILE 2"].ToString(), "Italy-mobile 2 destination area codes");
+      }
+
+      [TestMethod, Description("Asserts destination set perform standardization without removing any area code if there is no destination having implicit area which is a child of an area belonging to the same destination")]
+      public void DestinationSet_Standardize_WhenNoAreaNeedToBeRemoved()
+      {
+         DestinationSet<string> ds = new DestinationSet<string>();
+         ds.AddArea("SWEDEN", 46);
+         ds.UpdateDestination("SWEDEN-MOBILE 1", "4670-4675");
+         ds.UpdateDestination("SWEDEN-MOBILE 2", "4676-4678");
+
+         ds.Standardize();
+
+         Assert.AreEqual<string>("46", ds["SWEDEN"].ToString(), "Sweden destination area codes");
+         Assert.AreEqual<string>("4670-4675", ds["SWEDEN-MOBILE 1"].ToString(), "Sweden-mobile 1 destination area codes");
+         Assert.AreEqual<string>("4676-4678", ds["SWEDEN-MOBILE 2"].ToString(), "Sweden-mobile 2 destination area codes");
+      }
+
+      [TestMethod, Description("Asserts destination set perform standardization by removing area codes if there is any destination having implicit area which is a child of an area belonging to the same destination")]
+      public void DestinationSet_Standardize_WhenAreaNeedToBeRemoved()
+      {
+         DestinationSet<string> ds = new DestinationSet<string>();
+         ds.AddArea("SWEDEN", 46);
+         ds.UpdateDestination("SWEDEN-MOBILE 1", "4670-4675");
+         ds.UpdateDestination("SWEDEN-MOBILE 2", "4676-4678, 46777");
+         ds.UpdateDestination("ITALY", "39, 392, 391");
+         ds.UpdateDestination("ITALY-MOBILE 1", "3970-3975, 397123");
+         ds.UpdateDestination("ITALY-MOBILE 2", "3976-3978, 397787-397789, 3971234");
+
+         ds.Standardize();
+
+         Assert.AreEqual<string>("46", ds["SWEDEN"].ToString(), "Sweden destination area codes");
+         Assert.AreEqual<string>("4670-4675", ds["SWEDEN-MOBILE 1"].ToString(), "Sweden-mobile 1 destination area codes");
+         Assert.AreEqual<string>("4676-4678", ds["SWEDEN-MOBILE 2"].ToString(), "Sweden-mobile 2 destination area codes");
+         Assert.AreEqual<string>("39", ds["ITALY"].ToString(), "Italy destination area codes");
+         Assert.AreEqual<string>("3970-3975", ds["ITALY-MOBILE 1"].ToString(), "Italy-mobile 1 destination area codes");
+         Assert.AreEqual<string>("3971234,3976-3978", ds["ITALY-MOBILE 2"].ToString(), "Italy-mobile 2 destination area codes");
+      }
+
+      #endregion
    }
 }

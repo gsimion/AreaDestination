@@ -1,6 +1,6 @@
 ﻿namespace AreaDestinationVisualizer
 {
-   partial class ADVisualizer
+   partial class AreaDestinationVisualizer
    {
       /// <summary>
       /// Required designer variable.
@@ -32,7 +32,6 @@
          this.txtDestSet = new System.Windows.Forms.TextBox();
          this.errProvider = new System.Windows.Forms.ErrorProvider(this.components);
          this.btnPaint = new System.Windows.Forms.Button();
-         this.pnlDestSet = new System.Windows.Forms.Panel();
          this.lblRepresentation = new System.Windows.Forms.Label();
          this.lblDestinationSet = new System.Windows.Forms.Label();
          this.btnPopulate = new System.Windows.Forms.Button();
@@ -45,7 +44,13 @@
          this.lblDestinationID = new System.Windows.Forms.Label();
          this.lblDestAreas = new System.Windows.Forms.Label();
          this.txtDestID = new System.Windows.Forms.TextBox();
+         this.picDestSet = new System.Windows.Forms.PictureBox();
+         this.pnlDestSet = new System.Windows.Forms.Panel();
+         this.btnZoomPlus = new System.Windows.Forms.Button();
+         this.btnZoomMinus = new System.Windows.Forms.Button();
          ((System.ComponentModel.ISupportInitialize)(this.errProvider)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.picDestSet)).BeginInit();
+         this.pnlDestSet.SuspendLayout();
          this.SuspendLayout();
          // 
          // txtDestSet
@@ -70,22 +75,10 @@
          this.btnPaint.UseVisualStyleBackColor = true;
          this.btnPaint.Click += new System.EventHandler(this.btnPaint_Click);
          // 
-         // pnlDestSet
-         // 
-         this.pnlDestSet.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.pnlDestSet.BackColor = System.Drawing.SystemColors.Window;
-         this.pnlDestSet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-         this.pnlDestSet.Location = new System.Drawing.Point(388, 169);
-         this.pnlDestSet.Name = "pnlDestSet";
-         this.pnlDestSet.Size = new System.Drawing.Size(334, 265);
-         this.pnlDestSet.TabIndex = 1;
-         // 
          // lblRepresentation
          // 
          this.lblRepresentation.AutoSize = true;
-         this.lblRepresentation.Location = new System.Drawing.Point(388, 150);
+         this.lblRepresentation.Location = new System.Drawing.Point(369, 150);
          this.lblRepresentation.Name = "lblRepresentation";
          this.lblRepresentation.Size = new System.Drawing.Size(82, 13);
          this.lblRepresentation.TabIndex = 3;
@@ -181,11 +174,61 @@
          this.txtDestID.Size = new System.Drawing.Size(100, 20);
          this.txtDestID.TabIndex = 14;
          // 
-         // ADVisualizer
+         // picDestSet
+         // 
+         this.picDestSet.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.picDestSet.Location = new System.Drawing.Point(0, 0);
+         this.picDestSet.Name = "picDestSet";
+         this.picDestSet.Size = new System.Drawing.Size(348, 259);
+         this.picDestSet.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+         this.picDestSet.TabIndex = 15;
+         this.picDestSet.TabStop = false;
+         // 
+         // pnlDestSet
+         // 
+         this.pnlDestSet.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this.pnlDestSet.AutoScroll = true;
+         this.pnlDestSet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+         this.pnlDestSet.Controls.Add(this.picDestSet);
+         this.pnlDestSet.Location = new System.Drawing.Point(372, 169);
+         this.pnlDestSet.Name = "pnlDestSet";
+         this.pnlDestSet.Size = new System.Drawing.Size(350, 261);
+         this.pnlDestSet.TabIndex = 16;
+         // 
+         // btnZoomPlus
+         // 
+         this.btnZoomPlus.Location = new System.Drawing.Point(339, 169);
+         this.btnZoomPlus.Name = "btnZoomPlus";
+         this.btnZoomPlus.Size = new System.Drawing.Size(28, 25);
+         this.btnZoomPlus.TabIndex = 17;
+         this.btnZoomPlus.Tag = "Ceiling";
+         this.btnZoomPlus.Text = "+";
+         this.tlpTooltip.SetToolTip(this.btnZoomPlus, "Zoom In");
+         this.btnZoomPlus.UseVisualStyleBackColor = true;
+         this.btnZoomPlus.Click += new System.EventHandler(this.btnZoomPlus_Click);
+         // 
+         // btnZoomMinus
+         // 
+         this.btnZoomMinus.Location = new System.Drawing.Point(339, 201);
+         this.btnZoomMinus.Name = "btnZoomMinus";
+         this.btnZoomMinus.Size = new System.Drawing.Size(28, 25);
+         this.btnZoomMinus.TabIndex = 18;
+         this.btnZoomMinus.Tag = "Ceiling";
+         this.btnZoomMinus.Text = "-";
+         this.tlpTooltip.SetToolTip(this.btnZoomMinus, "Zoom Out");
+         this.btnZoomMinus.UseVisualStyleBackColor = true;
+         this.btnZoomMinus.Click += new System.EventHandler(this.btnZoomMinus_Click);
+         // 
+         // AreaDestinationVisualizer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(734, 442);
+         this.Controls.Add(this.btnZoomMinus);
+         this.Controls.Add(this.btnZoomPlus);
+         this.Controls.Add(this.pnlDestSet);
          this.Controls.Add(this.txtDestID);
          this.Controls.Add(this.lblDestAreas);
          this.Controls.Add(this.lblDestinationID);
@@ -198,12 +241,13 @@
          this.Controls.Add(this.lblDestinationSet);
          this.Controls.Add(this.lblRepresentation);
          this.Controls.Add(this.btnPaint);
-         this.Controls.Add(this.pnlDestSet);
          this.Controls.Add(this.txtDestSet);
          this.MinimumSize = new System.Drawing.Size(640, 480);
-         this.Name = "ADVisualizer";
+         this.Name = "AreaDestinationVisualizer";
          this.Text = "Area Destination Visualizer";
          ((System.ComponentModel.ISupportInitialize)(this.errProvider)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.picDestSet)).EndInit();
+         this.pnlDestSet.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -214,7 +258,6 @@
       private System.Windows.Forms.TextBox txtDestSet;
       private System.Windows.Forms.ErrorProvider errProvider;
       private System.Windows.Forms.Button btnPaint;
-      private System.Windows.Forms.Panel pnlDestSet;
       private System.Windows.Forms.Label lblRepresentation;
       private System.Windows.Forms.Label lblDestinationSet;
       private System.Windows.Forms.Button btnPopulate;
@@ -227,6 +270,10 @@
       private System.Windows.Forms.Label lblDestAreas;
       private System.Windows.Forms.Label lblDestinationID;
       private System.Windows.Forms.TextBox txtDestID;
+      private System.Windows.Forms.PictureBox picDestSet;
+      private System.Windows.Forms.Panel pnlDestSet;
+      private System.Windows.Forms.Button btnZoomPlus;
+      private System.Windows.Forms.Button btnZoomMinus;
    }
 }
 

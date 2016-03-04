@@ -21,7 +21,7 @@ namespace AreaDestinationTest
 
          Assert.AreEqual<int>(1, ar.Scale, "scale");
          Assert.AreEqual<int>(1, ar.Height, "height");
-         Assert.AreEqual<int>(0, ar.Width, "width");
+         Assert.AreEqual<int>(1, ar.Width, "width");
          Assert.AreEqual<string>("test", ar.Title, "title");
          Assert.AreEqual<string>(string.Empty, ar.Description, "description");
 
@@ -38,7 +38,7 @@ namespace AreaDestinationTest
 
          Assert.AreEqual<int>(1, ar.Scale, "scale");
          Assert.AreEqual<int>(1, ar.Height, "height");
-         Assert.AreEqual<int>(0, ar.Width, "width");
+         Assert.AreEqual<int>(1, ar.Width, "width");
          Assert.AreEqual<string>("test", ar.Title, "title");
          Assert.AreEqual<string>("description", ar.Description, "description");
 

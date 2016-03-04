@@ -333,6 +333,8 @@
       {
          decimal a = Convert.ToDecimal(Global.Dot + code.ToString(), CultureInfo.InvariantCulture.NumberFormat);
          IArea<T> aRange = ExplicitAreas.FirstOrDefault(c => c.Start <= a && c.End > a);
+         if (aRange == null)
+            return default(T);
          return aRange.Id;
       }
 
@@ -398,6 +400,39 @@
       {
          T[] FindDestinations = (from dest in _implicitDests where dest.Value.Areas.Any(c => a.InRange(c, false)) select dest.Key).ToArray();
          return FindDestinations;
+      }
+
+      /// <summary>
+      /// Standardizes the destination set.
+      /// Cleans implicit areas having parent on same destination, preserves areas having parent on another destination.
+      /// </summary>
+      public void Standardize()
+      {
+         // copy the full unique areas not belonging to the undefined destination
+         Dictionary<ulong, T> uniqueCodes = _uniqueAreaCodes.Where(x => !x.Value.Equals(UndefinedDestinationId)).ToDictionary(x => x.Key, y => y.Value);
+         List<ulong> codesToRemove = new List<ulong>();
+
+         foreach (KeyValuePair<ulong, T> code in uniqueCodes)
+         {
+            T id = code.Value;
+            ulong trunc = code.Key;
+            do
+            {
+               trunc /= 10;
+               T matchingId;
+               if (uniqueCodes.TryGetValue(trunc, out matchingId))
+               {
+                  // if same parent is the first matching destination the area can be removed
+                  if (matchingId.Equals(id))
+                     codesToRemove.Add(code.Key);
+                  break;
+               }
+
+            } while (trunc > 0);
+         }
+
+         foreach (ulong code in codesToRemove)
+            RemoveArea(code);
       }
    }
 }

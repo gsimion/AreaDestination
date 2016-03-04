@@ -9,6 +9,7 @@
    public class AreaRectangle<T> : Area<T> where T:IComparable 
    {
       internal readonly decimal _rank;
+      private int _translation = 0;
 
       /// <summary>
       /// Gets/sets the description of the rectangle.
@@ -24,6 +25,18 @@
          {
             return Id.ToString();
          }
+      }
+
+      /// <summary>
+      /// Translate the rectangle by a given value.
+      /// </summary>
+      public int Translate
+      {
+         set
+         {
+            _translation = value;
+         }
+
       }
 
       /// <summary>
@@ -43,7 +56,7 @@
       {
          get
          {
-            return Convert.ToInt32(decimal.Round(Start * Scale,0));
+            return Convert.ToInt32(decimal.Round(Start * Scale,0)) - _translation;
          }
       }
 
@@ -54,7 +67,7 @@
       {
          get
          {
-            return Convert.ToInt32(decimal.Round(((End - Start) * Scale), 0));
+            return Convert.ToInt32(decimal.Ceiling(((End - Start) * Scale)));
          }
       }
 
@@ -65,7 +78,7 @@
       {
          get
          {
-            return Convert.ToInt32(decimal.Round(_rank * ScaleY));
+            return Convert.ToInt32(decimal.Ceiling(_rank * ScaleY));
          }
       }
 

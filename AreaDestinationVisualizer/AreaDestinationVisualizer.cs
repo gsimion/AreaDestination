@@ -13,20 +13,34 @@
    /// <summary>
    /// Form visualizing areas.
    /// </summary>
-   public partial class ADVisualizer : Form
+   public partial class AreaDestinationVisualizer : Form
    {
       private DestinationSet<string> _ds = null;
       private List<AreaRectangle<string>> _currentRectangles = new List<AreaRectangle<string>>();
+      private double _zoom;
+      /// <summary>
+      /// Array containing different brushes for different digits.
+      /// </summary>
+      private readonly Brush[] _digitsBrushes = { Brushes.LightGray, Brushes.Yellow, Brushes.Red, Brushes.IndianRed, Brushes.Indigo, Brushes.Ivory, Brushes.Khaki, Brushes.Lavender, Brushes.LavenderBlush, Brushes.LawnGreen, Brushes.LightBlue, Brushes.LightCyan, Brushes.LightGray, Brushes.LightSalmon };
+      /// <summary>
+      /// Sets the zoom step.
+      /// </summary>
+      private const double ZoomStepIncrease = 0.2;
+      /// <summary>
+      /// Zoom default 100%.
+      /// </summary>
+      private const double ZoomDefault = 1;
 
       /// <summary>
       /// Creates a new form for visualizing areas.
       /// </summary>
-      public ADVisualizer()
+      public AreaDestinationVisualizer()
       {
          InitializeComponent();
-         this.SizeChanged += new EventHandler(this.btnPaint_Click);
-         this.pnlDestSet.MouseMove += new MouseEventHandler(this.pnlDestSet_MouseMove);
+         this.ResizeEnd += new EventHandler(this.btnPaint_Click);
+         this.picDestSet.MouseMove += new MouseEventHandler(this.picDestSet_MouseMove);
          this.lstDestination.SelectedIndexChanged += new EventHandler(this.lstDestination_SelectedIndexChanged);
+         _zoom = ZoomDefault;
       }
 
       /// <summary>
@@ -37,50 +51,49 @@
          if (_ds == null)
             return;
 
-         int scale = pnlDestSet.Width;
+         if (_zoom.Equals(ZoomDefault) && picDestSet.Dock != DockStyle.Fill)
+         {
+            picDestSet.Dock = DockStyle.Fill;
+            picDestSet.Anchor = AnchorStyles.None;
+            picDestSet.Width = pnlDestSet.Width;
+            picDestSet.Height = pnlDestSet.Height;
+         }
+         else if (!_zoom.Equals(ZoomDefault))
+         {
+            picDestSet.Dock = DockStyle.None;
+            picDestSet.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            picDestSet.Width = Convert.ToInt32(pnlDestSet.Width * _zoom);
+            picDestSet.Height = Convert.ToInt32(pnlDestSet.Height * _zoom);
+         }
+
+         int scale = picDestSet.Width;
          _currentRectangles = Painter.GetRepresentation<Destination<string>, string>(_ds, scale);
 
-         Color[] cols = { Color.LightGray, Color.Yellow, Color.Red, Color.IndianRed, Color.Indigo, Color.Ivory, Color.Khaki, Color.Lavender, Color.LavenderBlush, Color.LawnGreen, Color.LightBlue, Color.LightCyan, Color.LightGray, Color.LightSalmon };
-
-         ResetbackGround();
-
          int init = -1;
-         decimal rank = pnlDestSet.Height;
+         decimal rank = picDestSet.Height;
+         if (picDestSet.Image != null)
+            picDestSet.Image.Dispose();
+         picDestSet.Image = new Bitmap(picDestSet.Width, picDestSet.Height);
+         Graphics.FromImage(picDestSet.Image).FillRectangle(Brushes.White, picDestSet.DisplayRectangle); 
          foreach (AreaRectangle<string> r in _currentRectangles)
          {
-            r.ScaleY = pnlDestSet.Height;
+            r.Translate = scale / 10;
+            r.ScaleY = picDestSet.Height;
             if (rank != r.Height)
             {
                rank = r.Height;
                init++;
             }
-            SolidBrush myBrush = new System.Drawing.SolidBrush(cols[init]);
-            Graphics formGraphics;
-            formGraphics = pnlDestSet.CreateGraphics();
-            Rectangle show = new Rectangle(r.X, 0, r.Width, r.Height);
-            formGraphics.FillRectangle(myBrush, show);
-            myBrush.Dispose();
-            formGraphics.Dispose();
+            Rectangle display = new Rectangle(r.X, 0, r.Width, r.Height);
+            Graphics.FromImage(picDestSet.Image).FillRectangle(_digitsBrushes[init], display);          
          }
-      }
-
-      /// <summary>
-      /// Resets background of the panel containing the graph.
-      /// </summary>
-      private void ResetbackGround()
-      {
-         SolidBrush myBrush = new System.Drawing.SolidBrush(Color.White);
-         Graphics formGraphics;
-         formGraphics = pnlDestSet.CreateGraphics();
-         formGraphics.FillRectangle(myBrush, new Rectangle(0, 0, pnlDestSet.Width, pnlDestSet.Height));
-         myBrush.Dispose();
-         formGraphics.Dispose();
+         picDestSet.Refresh();
       }
 
       /// <summary>
       /// Handles mouse move event within the panel containing the graph.
       /// </summary>
-      private void pnlDestSet_MouseMove(object sender, MouseEventArgs e)
+      private void picDestSet_MouseMove(object sender, MouseEventArgs e)
       {
          if (_ds == null)
             return;
@@ -102,7 +115,6 @@
       private void btnPopulate_Click(object sender, EventArgs e)
       {
          lstDestination.Items.Clear();
-         ResetbackGround();
          if (txtDestSet.Text.Length == 0)
             return;
 
@@ -181,9 +193,27 @@
       protected override void DestroyHandle()
       {
          base.DestroyHandle();
-         this.SizeChanged -= new EventHandler(this.btnPaint_Click);
-         this.pnlDestSet.MouseMove -= new MouseEventHandler(this.pnlDestSet_MouseMove);
+         this.ResizeEnd -= new EventHandler(this.btnPaint_Click);
+         this.picDestSet.MouseMove -= new MouseEventHandler(this.picDestSet_MouseMove);
          this.lstDestination.SelectedIndexChanged -= new EventHandler(this.lstDestination_SelectedIndexChanged);
+      }
+
+      /// <summary>
+      /// Zoom in.
+      /// </summary>
+      private void btnZoomPlus_Click(object sender, EventArgs e)
+      {
+         _zoom += ZoomStepIncrease;
+         btnPaint_Click(sender, e);
+      }
+
+      /// <summary>
+      /// Zoom out.
+      /// </summary>
+      private void btnZoomMinus_Click(object sender, EventArgs e)
+      {
+         _zoom = Math.Max(ZoomDefault, _zoom - ZoomStepIncrease);
+         btnPaint_Click(sender, e);
       }
    }
 }
