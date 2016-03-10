@@ -1,6 +1,6 @@
 ﻿namespace AreaDestinationVisualizer
 {
-   partial class AreaDestinationVisualizer
+   partial class Visualizer
    {
       /// <summary>
       /// Required designer variable.
@@ -29,6 +29,7 @@
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Visualizer));
          this.txtDestSet = new System.Windows.Forms.TextBox();
          this.errProvider = new System.Windows.Forms.ErrorProvider(this.components);
          this.btnPaint = new System.Windows.Forms.Button();
@@ -38,6 +39,8 @@
          this.lstDestination = new System.Windows.Forms.ListBox();
          this.lblDestination = new System.Windows.Forms.Label();
          this.tlpTooltip = new System.Windows.Forms.ToolTip(this.components);
+         this.btnZoomPlus = new System.Windows.Forms.Button();
+         this.btnZoomMinus = new System.Windows.Forms.Button();
          this.txtAreas = new System.Windows.Forms.TextBox();
          this.lblAreas = new System.Windows.Forms.Label();
          this.btnUpdate = new System.Windows.Forms.Button();
@@ -46,8 +49,7 @@
          this.txtDestID = new System.Windows.Forms.TextBox();
          this.picDestSet = new System.Windows.Forms.PictureBox();
          this.pnlDestSet = new System.Windows.Forms.Panel();
-         this.btnZoomPlus = new System.Windows.Forms.Button();
-         this.btnZoomMinus = new System.Windows.Forms.Button();
+         this.worldMap = new AreaDestinationVisualizer.InteractiveWorldMap();
          ((System.ComponentModel.ISupportInitialize)(this.errProvider)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.picDestSet)).BeginInit();
          this.pnlDestSet.SuspendLayout();
@@ -120,6 +122,30 @@
          this.lblDestination.Size = new System.Drawing.Size(68, 13);
          this.lblDestination.TabIndex = 7;
          this.lblDestination.Text = "Destinations:";
+         // 
+         // btnZoomPlus
+         // 
+         this.btnZoomPlus.Location = new System.Drawing.Point(339, 169);
+         this.btnZoomPlus.Name = "btnZoomPlus";
+         this.btnZoomPlus.Size = new System.Drawing.Size(28, 25);
+         this.btnZoomPlus.TabIndex = 17;
+         this.btnZoomPlus.Tag = "Ceiling";
+         this.btnZoomPlus.Text = "+";
+         this.tlpTooltip.SetToolTip(this.btnZoomPlus, "Zoom In");
+         this.btnZoomPlus.UseVisualStyleBackColor = true;
+         this.btnZoomPlus.Click += new System.EventHandler(this.btnZoomPlus_Click);
+         // 
+         // btnZoomMinus
+         // 
+         this.btnZoomMinus.Location = new System.Drawing.Point(339, 201);
+         this.btnZoomMinus.Name = "btnZoomMinus";
+         this.btnZoomMinus.Size = new System.Drawing.Size(28, 25);
+         this.btnZoomMinus.TabIndex = 18;
+         this.btnZoomMinus.Tag = "Ceiling";
+         this.btnZoomMinus.Text = "-";
+         this.tlpTooltip.SetToolTip(this.btnZoomMinus, "Zoom Out");
+         this.btnZoomMinus.UseVisualStyleBackColor = true;
+         this.btnZoomMinus.Click += new System.EventHandler(this.btnZoomMinus_Click);
          // 
          // txtAreas
          // 
@@ -197,35 +223,23 @@
          this.pnlDestSet.Size = new System.Drawing.Size(350, 261);
          this.pnlDestSet.TabIndex = 16;
          // 
-         // btnZoomPlus
+         // worldMap
          // 
-         this.btnZoomPlus.Location = new System.Drawing.Point(339, 169);
-         this.btnZoomPlus.Name = "btnZoomPlus";
-         this.btnZoomPlus.Size = new System.Drawing.Size(28, 25);
-         this.btnZoomPlus.TabIndex = 17;
-         this.btnZoomPlus.Tag = "Ceiling";
-         this.btnZoomPlus.Text = "+";
-         this.tlpTooltip.SetToolTip(this.btnZoomPlus, "Zoom In");
-         this.btnZoomPlus.UseVisualStyleBackColor = true;
-         this.btnZoomPlus.Click += new System.EventHandler(this.btnZoomPlus_Click);
+         this.worldMap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+         this.worldMap.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("worldMap.BackgroundImage")));
+         this.worldMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+         this.worldMap.Location = new System.Drawing.Point(15, 309);
+         this.worldMap.Name = "worldMap";
+         this.worldMap.Size = new System.Drawing.Size(316, 121);
+         this.worldMap.TabIndex = 19;
          // 
-         // btnZoomMinus
-         // 
-         this.btnZoomMinus.Location = new System.Drawing.Point(339, 201);
-         this.btnZoomMinus.Name = "btnZoomMinus";
-         this.btnZoomMinus.Size = new System.Drawing.Size(28, 25);
-         this.btnZoomMinus.TabIndex = 18;
-         this.btnZoomMinus.Tag = "Ceiling";
-         this.btnZoomMinus.Text = "-";
-         this.tlpTooltip.SetToolTip(this.btnZoomMinus, "Zoom Out");
-         this.btnZoomMinus.UseVisualStyleBackColor = true;
-         this.btnZoomMinus.Click += new System.EventHandler(this.btnZoomMinus_Click);
-         // 
-         // AreaDestinationVisualizer
+         // Visualizer
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(734, 442);
+         this.Controls.Add(this.worldMap);
          this.Controls.Add(this.btnZoomMinus);
          this.Controls.Add(this.btnZoomPlus);
          this.Controls.Add(this.pnlDestSet);
@@ -243,7 +257,7 @@
          this.Controls.Add(this.btnPaint);
          this.Controls.Add(this.txtDestSet);
          this.MinimumSize = new System.Drawing.Size(640, 480);
-         this.Name = "AreaDestinationVisualizer";
+         this.Name = "Visualizer";
          this.Text = "Area Destination Visualizer";
          ((System.ComponentModel.ISupportInitialize)(this.errProvider)).EndInit();
          ((System.ComponentModel.ISupportInitialize)(this.picDestSet)).EndInit();
@@ -274,6 +288,7 @@
       private System.Windows.Forms.Panel pnlDestSet;
       private System.Windows.Forms.Button btnZoomPlus;
       private System.Windows.Forms.Button btnZoomMinus;
+      private InteractiveWorldMap worldMap;
    }
 }
 

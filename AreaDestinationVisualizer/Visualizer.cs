@@ -13,15 +13,29 @@
    /// <summary>
    /// Form visualizing areas.
    /// </summary>
-   public partial class AreaDestinationVisualizer : Form
+   public partial class Visualizer : Form
    {
       private DestinationSet<string> _ds = null;
       private List<AreaRectangle<string>> _currentRectangles = new List<AreaRectangle<string>>();
       private double _zoom;
+      FormWindowState _lastWindowState;
       /// <summary>
       /// Array containing different brushes for different digits.
       /// </summary>
       private readonly Brush[] _digitsBrushes = { Brushes.LightGray, Brushes.Yellow, Brushes.Red, Brushes.IndianRed, Brushes.Indigo, Brushes.Ivory, Brushes.Khaki, Brushes.Lavender, Brushes.LavenderBlush, Brushes.LawnGreen, Brushes.LightBlue, Brushes.LightCyan, Brushes.LightGray, Brushes.LightSalmon };
+      /// <summary>
+      /// Vector of distinct RGB colors.
+      /// </summary>
+      private readonly string[] _colorsRgb = new string[] { 
+         "FF0000", "00FF00", "0000FF", "FFFF00", "FF00FF", "00FFFF", "000000", 
+         "800000", "008000", "000080", "808000", "800080", "008080", "808080", 
+         "C00000", "00C000", "0000C0", "C0C000", "C000C0", "00C0C0", "C0C0C0", 
+         "400000", "004000", "000040", "404000", "400040", "004040", "404040", 
+         "200000", "002000", "000020", "202000", "200020", "002020", "202020", 
+         "600000", "006000", "000060", "606000", "600060", "006060", "606060", 
+         "A00000", "00A000", "0000A0", "A0A000", "A000A0", "00A0A0", "A0A0A0", 
+         "E00000", "00E000", "0000E0", "E0E000", "E000E0", "00E0E0", "E0E0E0", 
+      };
       /// <summary>
       /// Sets the zoom step.
       /// </summary>
@@ -34,13 +48,15 @@
       /// <summary>
       /// Creates a new form for visualizing areas.
       /// </summary>
-      public AreaDestinationVisualizer()
+      public Visualizer()
       {
          InitializeComponent();
          this.ResizeEnd += new EventHandler(this.btnPaint_Click);
+         this.Resize += new EventHandler(this.Visualizer_Resize);
          this.picDestSet.MouseMove += new MouseEventHandler(this.picDestSet_MouseMove);
          this.lstDestination.SelectedIndexChanged += new EventHandler(this.lstDestination_SelectedIndexChanged);
          _zoom = ZoomDefault;
+         _lastWindowState = this.WindowState;
       }
 
       /// <summary>
@@ -84,10 +100,23 @@
                rank = r.Height;
                init++;
             }
-            Rectangle display = new Rectangle(r.X, 0, r.Width, r.Height);
-            Graphics.FromImage(picDestSet.Image).FillRectangle(_digitsBrushes[init], display);          
+            Rectangle AreaToDisplay = new Rectangle(r.X, 0, r.Width, r.Height);
+            Graphics.FromImage(picDestSet.Image).FillRectangle(_digitsBrushes[init], AreaToDisplay);
+            Graphics.FromImage(picDestSet.Image).FillRectangle(Brushes.Black, AreaToDisplay.X, AreaToDisplay.Y, AreaToDisplay.Width, 5);
          }
          picDestSet.Refresh();
+      }
+
+      /// <summary>
+      /// Handles reseize event, triggering painting when the window state changes. 
+      /// </summary>
+      private void Visualizer_Resize(object sender, EventArgs e)
+      {
+         if (this.WindowState != _lastWindowState)
+         {
+            _lastWindowState = WindowState;
+            btnPaint_Click(sender, e);
+         }
       }
 
       /// <summary>
@@ -146,7 +175,11 @@
          txtAreas.Text = String.Empty;
          string id = Convert.ToString(lstDestination.SelectedItem);
          if (_ds != null && _ds.Destinations.ContainsKey(id))
+         {
             txtAreas.Text = _ds[id].ToString();
+            if (id != null && !id.Equals(_ds.UndefinedDestinationId))
+               worldMap.SetCountry(Convert.ToUInt64(_ds[id].Areas.First().Start.ToString().Substring(2)));
+         }
       }
 
       /// <summary>
@@ -194,6 +227,7 @@
       {
          base.DestroyHandle();
          this.ResizeEnd -= new EventHandler(this.btnPaint_Click);
+         this.Resize -= new EventHandler(this.Visualizer_Resize);
          this.picDestSet.MouseMove -= new MouseEventHandler(this.picDestSet_MouseMove);
          this.lstDestination.SelectedIndexChanged -= new EventHandler(this.lstDestination_SelectedIndexChanged);
       }

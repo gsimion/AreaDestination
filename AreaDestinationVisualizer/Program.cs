@@ -15,7 +15,7 @@ namespace AreaDestinationVisualizer
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new AreaDestinationVisualizer());
+         Application.Run(new Visualizer());
       }
    }
 }
